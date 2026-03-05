@@ -3,7 +3,7 @@ import Home from "@/components/pages/home";
 import { APP_NAME, WEB_URL } from "@/data/constants";
 
 export const metadata: Metadata = {
-  title: `Free Online Tools | ${APP_NAME}`,
+  title: `Free Tools for you | ${APP_NAME}`,
   description:
     "A growing collection of useful web tools — fast, free, and no sign-up required. Access converters, generators, and text tools.",
   alternates: {
