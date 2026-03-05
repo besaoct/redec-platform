@@ -38,15 +38,20 @@ export function ThemeProvider({
     const root = window.document.documentElement;
     root.classList.remove("light", "dark");
 
-    if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
-      root.classList.add(systemTheme);
-      return;
-    }
+    const effectiveTheme = theme === "system" 
+      ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+      : theme;
 
-    root.classList.add(theme);
+    root.classList.add(effectiveTheme);
+    
+    // Update theme-color meta tag
+    let meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.setAttribute('name', 'theme-color');
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute('content', effectiveTheme === 'dark' ? '#0c0b14' : '#fdfaf6');
   }, [theme]);
 
   const value = {
