@@ -44,14 +44,18 @@ export function ThemeProvider({
 
     root.classList.add(effectiveTheme);
     
-    // Update theme-color meta tag
-    let meta = document.querySelector('meta[name="theme-color"]');
-    if (!meta) {
-      meta = document.createElement('meta');
+    // Robust update of theme-color meta tag
+    const updateThemeColor = (color: string) => {
+      // Remove any existing theme-color meta tags (including those with media queries)
+      document.querySelectorAll('meta[name="theme-color"]').forEach(el => el.remove());
+      
+      const meta = document.createElement('meta');
       meta.setAttribute('name', 'theme-color');
+      meta.setAttribute('content', color);
       document.head.appendChild(meta);
-    }
-    meta.setAttribute('content', effectiveTheme === 'dark' ? '#0c0b14' : '#fdfaf6');
+    };
+
+    updateThemeColor(effectiveTheme === 'dark' ? '#0c0b14' : '#fdfaf6');
   }, [theme]);
 
   const value = {
