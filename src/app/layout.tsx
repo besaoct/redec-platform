@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
-import { Montserrat,  Quicksand} from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Montserrat,  Quicksand } from "next/font/google";
 import "./globals.css";
 import AppProviders from "./providers";
 import { SEO, WEB_URL } from "@/data/constants";
@@ -14,11 +14,18 @@ const fontSans = Quicksand({
   subsets:["latin"],
   weight: ["700", "600", "500", "400", "300"],
 });
-
 export const metadata: Metadata = {
   metadataBase: new URL(WEB_URL),
   ...SEO.metadata,
+};
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fdfaf6" },
+    { media: "(prefers-color-scheme: dark)", color: "#0c0b14" },
+  ],
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -26,6 +33,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
   return (
     <html lang="en">
       <body
