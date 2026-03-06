@@ -177,8 +177,6 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-variant-numeric: tabular-nums;
-    font-feature-settings: "tnum";
   }
    
 
@@ -186,12 +184,11 @@
   .num, 
   input[type="number"],
   .tabular-nums {
-    font-family: var(--font-display) !important;
+    font-family: var(--font-display);
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum";
   }
 
-  
   button {
     @apply outline-none hover:bg-accent hover:text-accent-foreground;
   }
