@@ -162,9 +162,9 @@ export function SearchBar() {
     >
       {/* Desktop visual backdrop only (no click handler here anymore) */}
       {!isMobile && isOpen && (
-        <div 
+        <div
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 bg-background/20 backdrop-blur-[2px] z-[-1]" 
+          className="fixed inset-0 bg-background/20 backdrop-blur-[2px] z-[-1]"
         />
       )}
 

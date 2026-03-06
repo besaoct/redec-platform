@@ -1,26 +1,28 @@
-'use client'
+"use client";
 
 import { useState } from "react";
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { tools } from "@/data/tools";
 
-
 const Index = () => {
-
   return (
     <div className="max-w-5xl mr-auto animate-fade-in">
-
       <div className="text-left mb-8">
         <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold font-display tracking-tight mb-3">
           Free <span className="text-primary">Tools</span> for you
         </h1>
         <p className="text-muted-foreground text-lg max-w-xl ">
-          A growing collection of useful web tools — fast, free, and Open source.
+          A growing collection of useful web tools — fast, free, and Open
+          source.
         </p>
       </div>
-
 
       {tools.map((cat) => (
         <section key={cat.category} className="mb-8">

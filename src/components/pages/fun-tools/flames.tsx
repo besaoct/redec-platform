@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
@@ -9,8 +9,12 @@ import { Label } from "@/components/ui/label";
 import { Heart, RefreshCcw, User, Share2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { FLAMES_MAP, type FlamesResult } from "@/data/tools/flames";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { FLAMES_MAP, type FlamesResult } from "@/data/tools/fun-tools/flames";
 
 export default function Flames() {
   const searchParams = useSearchParams();
@@ -97,13 +101,15 @@ export default function Flames() {
   const share = () => {
     const url = window.location.href;
     if (navigator.share) {
-      navigator.share({
-        title: 'FLAMES Result',
-        text: `FLAMES result for ${name1} and ${name2} is ${result ? FLAMES_MAP[result].label : ''}!`,
-        url: url,
-      }).catch(() => {
-        copyToClipboard(url);
-      });
+      navigator
+        .share({
+          title: "FLAMES Result",
+          text: `FLAMES result for ${name1} and ${name2} is ${result ? FLAMES_MAP[result].label : ""}!`,
+          url: url,
+        })
+        .catch(() => {
+          copyToClipboard(url);
+        });
     } else {
       copyToClipboard(url);
     }
@@ -119,8 +125,12 @@ export default function Flames() {
   return (
     <div className="max-w-5xl mr-auto animate-fade-in">
       <div className="mb-6">
-        <h1 className="text-xl sm:text-3xl font-extrabold font-display">FLAMES <span className="text-primary">Game</span></h1>
-        <p className="text-muted-foreground mt-2">Discover your relationship status with the classic FLAMES game</p>
+        <h1 className="text-xl sm:text-3xl font-extrabold font-display">
+          FLAMES <span className="text-primary">Game</span>
+        </h1>
+        <p className="text-muted-foreground mt-2">
+          Discover your relationship status with the classic FLAMES game
+        </p>
       </div>
 
       <Card className="mb-8">
@@ -153,8 +163,14 @@ export default function Flames() {
               </div>
             </div>
             <div className="flex gap-3">
-              <Button type="submit" className="flex-1" onClick={handleCalculate} disabled={!name1 || !name2}>
-                <Heart className="mr-2 h-4 w-4  fill-current" /> Calculate Relationship
+              <Button
+                type="submit"
+                className="flex-1"
+                onClick={handleCalculate}
+                disabled={!name1 || !name2}
+              >
+                <Heart className="mr-2 h-4 w-4  fill-current" /> Calculate
+                Relationship
               </Button>
               <Button variant="outline" size="icon" onClick={reset}>
                 <RefreshCcw className="h-4 w-4" />
@@ -166,26 +182,42 @@ export default function Flames() {
 
       {result && (
         <Card className="animate-in zoom-in-95 duration-300 relative overflow-hidden">
-           <div className="absolute top-4 right-4">
-             <Tooltip open={copied}>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={share}>
-                    {copied ? <Check className="h-4 w-4 text-success" /> : <Share2 className="h-4 w-4" />}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="top">Link Copied!</TooltipContent>
-             </Tooltip>
+          <div className="absolute top-4 right-4">
+            <Tooltip open={copied}>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 rounded-full"
+                  onClick={share}
+                >
+                  {copied ? (
+                    <Check className="h-4 w-4 text-success" />
+                  ) : (
+                    <Share2 className="h-4 w-4" />
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="top">Link Copied!</TooltipContent>
+            </Tooltip>
           </div>
           <CardHeader className="text-center">
             <CardTitle className="sr-only">Relationship Result</CardTitle>
           </CardHeader>
           <CardContent className="text-center pb-8">
             <div className="text-6xl mb-4">{FLAMES_MAP[result].icon}</div>
-            <div className={cn("text-4xl font-black font-display tracking-widest uppercase", FLAMES_MAP[result].color)}>
+            <div
+              className={cn(
+                "text-4xl font-black font-display tracking-widest uppercase",
+                FLAMES_MAP[result].color,
+              )}
+            >
               {FLAMES_MAP[result].label}
             </div>
             <p className="text-muted-foreground mt-4 italic">
-              Between <span className="font-semibold text-foreground">{name1}</span> and <span className="font-semibold text-foreground">{name2}</span>
+              Between{" "}
+              <span className="font-semibold text-foreground">{name1}</span> and{" "}
+              <span className="font-semibold text-foreground">{name2}</span>
             </p>
           </CardContent>
         </Card>
@@ -194,9 +226,11 @@ export default function Flames() {
       <div className="mt-8">
         <h3 className="text-sm font-semibold mb-3">How it works</h3>
         <p className="text-xs text-muted-foreground leading-relaxed">
-          FLAMES is a popular game named after the acronym: Friends, Lovers, Affection, Marriage, Enemies, Siblings. 
-          The game works by taking two names, removing common letters, and counting the remaining characters. 
-          This count is then used to cyclically eliminate letters from the word "FLAMES" until only one remains.
+          FLAMES is a popular game named after the acronym: Friends, Lovers,
+          Affection, Marriage, Enemies, Siblings. The game works by taking two
+          names, removing common letters, and counting the remaining characters.
+          This count is then used to cyclically eliminate letters from the word
+          "FLAMES" until only one remains.
         </p>
       </div>
     </div>

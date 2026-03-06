@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
@@ -9,8 +9,12 @@ import { Label } from "@/components/ui/label";
 import { Sparkles, RefreshCcw, User, Share2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { AURA_COLORS, MOODS } from "@/data/tools/aura-reader";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { AURA_COLORS, MOODS } from "@/data/tools/fun-tools/aura-reader";
 
 export default function AuraReader() {
   const searchParams = useSearchParams();
@@ -20,7 +24,7 @@ export default function AuraReader() {
 
   const [name, setName] = useState(searchParams.get("name") || "");
   const [selectedMood, setSelectedMood] = useState<number | null>(
-    searchParams.get("mood") ? parseInt(searchParams.get("mood")!) : null
+    searchParams.get("mood") ? parseInt(searchParams.get("mood")!) : null,
   );
   const [resultIndex, setResultIndex] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
@@ -29,8 +33,11 @@ export default function AuraReader() {
     if (!userName || !moodValue) return null;
 
     // Simple deterministic hash based on name and mood
-    const nameValue = userName.toLowerCase().split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const totalValue = nameValue + (moodValue * 10);
+    const nameValue = userName
+      .toLowerCase()
+      .split("")
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const totalValue = nameValue + moodValue * 10;
     return totalValue % AURA_COLORS.length;
   }, []);
 
@@ -72,13 +79,15 @@ export default function AuraReader() {
     const url = window.location.href;
     const aura = resultIndex !== null ? AURA_COLORS[resultIndex] : null;
     if (navigator.share) {
-      navigator.share({
-        title: 'My Aura Color Reading',
-        text: `My aura color today is ${aura?.name}! ${aura?.description}`,
-        url: url,
-      }).catch(() => {
-        copyToClipboard(url);
-      });
+      navigator
+        .share({
+          title: "My Aura Color Reading",
+          text: `My aura color today is ${aura?.name}! ${aura?.description}`,
+          url: url,
+        })
+        .catch(() => {
+          copyToClipboard(url);
+        });
     } else {
       copyToClipboard(url);
     }
@@ -96,8 +105,12 @@ export default function AuraReader() {
   return (
     <div className="max-w-5xl mr-auto animate-fade-in">
       <div className="mb-6">
-        <h1 className="text-xl sm:text-3xl font-extrabold font-display">Aura <span className="text-primary">Reader</span></h1>
-        <p className="text-muted-foreground mt-2">Discover the color of your energy based on your name and mood</p>
+        <h1 className="text-xl sm:text-3xl font-extrabold font-display">
+          Aura <span className="text-primary">Reader</span>
+        </h1>
+        <p className="text-muted-foreground mt-2">
+          Discover the color of your energy based on your name and mood
+        </p>
       </div>
 
       <Card className="mb-8">
@@ -126,20 +139,27 @@ export default function AuraReader() {
                     onClick={() => setSelectedMood(mood.value)}
                     className={cn(
                       "flex flex-col items-center justify-center p-3 break-all rounded-xl border-2  transition-all hover:bg-accent",
-                      selectedMood === mood.value 
-                        ? "border-primary/80 bg-primary/5 scale-102" 
-                        : "border-primary/10 bg-muted/50"
+                      selectedMood === mood.value
+                        ? "border-primary/80 bg-primary/5 scale-102"
+                        : "border-primary/10 bg-muted/50",
                     )}
                   >
                     <span className="text-2xl mb-1">{mood.emoji}</span>
-                    <span className="text-[10px] font-medium uppercase tracking-wider">{mood.label}</span>
+                    <span className="text-[10px] font-medium uppercase tracking-wider">
+                      {mood.label}
+                    </span>
                   </button>
                 ))}
               </div>
             </div>
 
             <div className="flex gap-3">
-              <Button type="submit" className="flex-1" onClick={handleCalculate} disabled={!name || selectedMood === null}>
+              <Button
+                type="submit"
+                className="flex-1"
+                onClick={handleCalculate}
+                disabled={!name || selectedMood === null}
+              >
                 <Sparkles className="mr-2 h-4 w-4 fill-current" /> Read My Aura
               </Button>
               <Button variant="outline" size="icon" onClick={reset}>
@@ -153,37 +173,69 @@ export default function AuraReader() {
       {aura && (
         <Card className="animate-in zoom-in-95 duration-500 relative overflow-hidden border-none shadow-2xl">
           {/* Background Glow */}
-          <div className={cn("absolute inset-0 opacity-10 blur-3xl", aura.color)} />
-          
-           <div className="absolute top-4 right-4 z-10">
-             <Tooltip open={copied}>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-background/50 backdrop-blur-sm" onClick={share}>
-                    {copied ? <Check className="h-4 w-4 text-success" /> : <Share2 className="h-4 w-4" />}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="top">Link Copied!</TooltipContent>
-             </Tooltip>
+          <div
+            className={cn("absolute inset-0 opacity-10 blur-3xl", aura.color)}
+          />
+
+          <div className="absolute top-4 right-4 z-10">
+            <Tooltip open={copied}>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 rounded-full bg-background/50 backdrop-blur-sm"
+                  onClick={share}
+                >
+                  {copied ? (
+                    <Check className="h-4 w-4 text-success" />
+                  ) : (
+                    <Share2 className="h-4 w-4" />
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="top">Link Copied!</TooltipContent>
+            </Tooltip>
           </div>
 
           <CardContent className="text-center py-12 relative z-10">
             <div className="relative inline-block mb-6">
-              <div className={cn("w-24 h-24 rounded-full mx-auto animate-pulse blur-xl absolute inset-0", aura.color)} />
-              <div className={cn("w-24 h-24 rounded-full mx-auto relative border-4 border-background shadow-inner", aura.color)} />
+              <div
+                className={cn(
+                  "w-24 h-24 rounded-full mx-auto animate-pulse blur-xl absolute inset-0",
+                  aura.color,
+                )}
+              />
+              <div
+                className={cn(
+                  "w-24 h-24 rounded-full mx-auto relative border-4 border-background shadow-inner",
+                  aura.color,
+                )}
+              />
             </div>
-            
-            <CardTitle className={cn("text-5xl font-black font-display tracking-tighter uppercase mb-4", aura.textColor)}>
+
+            <CardTitle
+              className={cn(
+                "text-5xl font-black font-display tracking-tighter uppercase mb-4",
+                aura.textColor,
+              )}
+            >
               {aura.name}
             </CardTitle>
-            
+
             <div className="max-w-md mx-auto">
               <p className="text-lg font-medium leading-relaxed mb-6">
                 {aura.description}
               </p>
-              
+
               <div className="flex flex-wrap justify-center gap-2">
-                {aura.traits.map(trait => (
-                  <span key={trait} className={cn("px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-background/50 backdrop-blur-sm border", aura.textColor)}>
+                {aura.traits.map((trait) => (
+                  <span
+                    key={trait}
+                    className={cn(
+                      "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-background/50 backdrop-blur-sm border",
+                      aura.textColor,
+                    )}
+                  >
                     {trait}
                   </span>
                 ))}
@@ -196,8 +248,11 @@ export default function AuraReader() {
       <div className="mt-8">
         <h3 className="text-sm font-semibold mb-3">How it works</h3>
         <p className="text-xs text-muted-foreground leading-relaxed">
-          The Aura Reader uses a combination of your name's numerological value and your current emotional vibration (mood) to determine your energy's primary frequency. 
-          Each color corresponds to different psychological and spiritual states, offering a glimpse into your current energetic presence.
+          The Aura Reader uses a combination of your name's numerological value
+          and your current emotional vibration (mood) to determine your energy's
+          primary frequency. Each color corresponds to different psychological
+          and spiritual states, offering a glimpse into your current energetic
+          presence.
         </p>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Montserrat,  Quicksand } from "next/font/google";
+import { Montserrat, Quicksand } from "next/font/google";
 import "./globals.css";
 import AppProviders from "./providers";
 import { SEO, WEB_URL } from "@/data/constants";
@@ -11,7 +11,7 @@ const fontDisplay = Montserrat({
 
 const fontSans = Quicksand({
   variable: "--font-sans",
-  subsets:["latin"],
+  subsets: ["latin"],
   weight: ["700", "600", "500", "400", "300"],
 });
 export const metadata: Metadata = {
@@ -29,8 +29,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-
   return (
     <html lang="en">
       <body

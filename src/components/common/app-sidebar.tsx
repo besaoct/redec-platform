@@ -1,8 +1,6 @@
 "use client";
 
-import {
-  Home,
-} from "lucide-react";
+import { Home } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { NavLink } from "./nav-link";
 import Image from "next/image";
@@ -36,18 +34,29 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar collapsible="offcanvas" >
+    <Sidebar collapsible="offcanvas">
       <SidebarHeader className="h-14 border-b flex items-start px-4">
-         <div className="flex my-auto  items-center justify-center gap-3">
-            <Image src="/logo.png" alt="Redec Logo" width={30} height={30} className="rounded" />
-             <TextLogo/>
-         </div>
+        <div className="flex my-auto  items-center justify-center gap-3">
+          <Image
+            src="/logo.png"
+            alt="Redec Logo"
+            width={30}
+            height={30}
+            className="rounded"
+          />
+          <TextLogo />
+        </div>
       </SidebarHeader>
       <SidebarContent className="py-2">
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton className=" rounded" asChild isActive={isActive("/")} onClick={handleLinkClick}>
+              <SidebarMenuButton
+                className=" rounded"
+                asChild
+                isActive={isActive("/")}
+                onClick={handleLinkClick}
+              >
                 <NavLink
                   href="/"
                   end
@@ -69,7 +78,12 @@ export function AppSidebar() {
               <SidebarMenu>
                 {group.items.map((item) => (
                   <SidebarMenuItem key={item.url}>
-                    <SidebarMenuButton className="rounded" asChild isActive={isActive(item.url)} onClick={handleLinkClick}>
+                    <SidebarMenuButton
+                      className="rounded"
+                      asChild
+                      isActive={isActive(item.url)}
+                      onClick={handleLinkClick}
+                    >
                       <NavLink
                         href={item.url}
                         end
