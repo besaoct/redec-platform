@@ -51,9 +51,15 @@ export const SEO = {
    },
 
     title: APP_TITLE,
-    description: `${APP_NAME} provides a growing collection of free, fast, and secure all in one online and Open source tools. Convert, generate, create, and analyze effortlessly.`,
+    description: `${APP_NAME} provides a growing collection of free, fast, and secure online and Open source tools. Convert, generate, create, calculate and analyze effortlessly.`,
     keywords: [
       "free online tools",
+      "all in one",
+      "all in one tools",
+      "web tools",
+      "seo tools",
+      "dev tools",
+      "calculator",
       "unit converter",
       "password generator",
       "qr code generator",

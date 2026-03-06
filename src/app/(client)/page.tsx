@@ -5,7 +5,7 @@ import { APP_NAME, WEB_URL } from "@/data/constants";
 export const metadata: Metadata = {
   title: `Free Tools for you | ${APP_NAME}`,
   description:
-    "A growing collection of useful web tools — fast, free, and no sign-up required. Access converters, generators, and text tools.",
+    "A growing collection of useful tools — fast, free, and open source. Convert, generate, create, calculate and analyze effortlessly.",
   alternates: {
     canonical: WEB_URL,
   },

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { tools } from "@/data/tools";
-import { cn } from "@/lib/utils";
+
 import { SVGIcon } from "@/components/common/svg-icon";
 
 const Index = () => {
@@ -19,7 +19,7 @@ const Index = () => {
           Free <span className="text-primary">Tools</span> for you
         </h1>
         <p className="text-muted-foreground text-lg max-w-xl ">
-          A growing collection of useful web tools — fast, free, and Open
+          A growing collection of useful tools — fast, free, and Open
           source.
         </p>
       </div>
