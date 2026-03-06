@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${fontSans.variable} ${fontDisplay.variable}`}
+        className={`${fontSans.variable} ${fontDisplay.variable} tabular-nums font-sans`}
         cz-shortcut-listen="true"
       >
         <AppProviders>{children}</AppProviders>

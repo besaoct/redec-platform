@@ -6,8 +6,27 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RefreshCcw, User, Users, Info, Heart } from "lucide-react";
+import {
+  RefreshCcw,
+  User,
+  Users,
+  Info,
+  Heart,
+  AlertCircle,
+  Calendar,
+  ArrowRight,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  differenceInDays,
+  differenceInYears,
+  intervalToDuration,
+  parseISO,
+  isValid,
+  addYears,
+  format,
+  isAfter,
+} from "date-fns";
 
 export default function AgeGapCalculator() {
   const [mode, setMode] = useState("dob");
@@ -21,58 +40,104 @@ export default function AgeGapCalculator() {
   const [age2, setAge2] = useState("25");
 
   const results = useMemo(() => {
+    const now = new Date();
+
     if (mode === "dob") {
-      const d1 = new Date(dob1);
-      const d2 = new Date(dob2);
-      if (isNaN(d1.getTime()) || isNaN(d2.getTime())) return null;
+      const d1 = parseISO(dob1);
+      const d2 = parseISO(dob2);
+      if (!isValid(d1) || !isValid(d2)) return null;
 
-      const diff = Math.abs(d1.getTime() - d2.getTime());
-      const totalDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+      // Future date validation
+      const isFuture1 = isAfter(d1, now);
+      const isFuture2 = isAfter(d2, now);
+      if (isFuture1 || isFuture2) {
+        return { error: "Birth dates cannot be in the future" };
+      }
 
-      const years = Math.floor(totalDays / 365.25);
-      const remainingDays = totalDays % 365.25;
-      const months = Math.floor(remainingDays / 30.44);
-      const days = Math.round(remainingDays % 30.44);
+      const olderDate = d1 < d2 ? d1 : d2;
+      const youngerDate = d1 < d2 ? d2 : d1;
 
-      const older = d1 < d2 ? "Person 1" : "Person 2";
+      const duration = intervalToDuration({
+        start: olderDate,
+        end: youngerDate,
+      });
 
-      // Calculate current ages for the 'rule'
-      const now = new Date();
-      const age1Now =
-        now.getFullYear() -
-        d1.getFullYear() -
-        (now < new Date(now.getFullYear(), d1.getMonth(), d1.getDate())
-          ? 1
-          : 0);
-      const age2Now =
-        now.getFullYear() -
-        d2.getFullYear() -
-        (now < new Date(now.getFullYear(), d2.getMonth(), d2.getDate())
-          ? 1
-          : 0);
+      const years = duration.years || 0;
+      const months = duration.months || 0;
+      const days = duration.days || 0;
+      const totalDays = Math.abs(differenceInDays(d1, d2));
+
+      const age1Now = differenceInYears(now, d1);
+      const age2Now = differenceInYears(now, d2);
+
+      const minAge = Math.min(age1Now, age2Now);
+      const maxAge = Math.max(age1Now, age2Now);
+      const ratio = minAge > 0 ? maxAge / minAge : maxAge || 1;
+
+      const ruleCheck = checkRule(age1Now, age2Now);
+      let futureAcceptance = null;
+
+      if (!ruleCheck) {
+        const older = maxAge;
+        const younger = minAge;
+        // Solve for x: (younger + x) >= (older + x) / 2 + 7
+        // 2y + 2x >= o + x + 14 => x >= o - 2y + 14
+        const yearsToWait = older - 2 * younger + 14;
+        if (yearsToWait > 0) {
+          const acceptanceDate = addYears(now, yearsToWait);
+          futureAcceptance = {
+            years: yearsToWait,
+            date: format(acceptanceDate, "yyyy"),
+          };
+        }
+      }
 
       return {
         years,
         months,
         days,
         totalDays,
-        older,
-        ratio: Math.max(age1Now, age2Now) / Math.min(age1Now, age2Now) || 1,
-        ruleCheck: checkRule(age1Now, age2Now),
+        older: d1 < d2 ? "Person 1" : "Person 2",
+        age1: age1Now,
+        age2: age2Now,
+        ratio,
+        ruleCheck,
+        futureAcceptance,
       };
     } else {
       const a1 = parseFloat(age1);
       const a2 = parseFloat(age2);
       if (isNaN(a1) || isNaN(a2)) return null;
 
+      const olderAge = Math.max(a1, a2);
+      const youngerAge = Math.min(a1, a2);
+
+      const ratio = youngerAge > 0 ? olderAge / youngerAge : olderAge || 1;
+
+      const ruleCheck = checkRule(a1, a2);
+      let futureAcceptance = null;
+
+      if (!ruleCheck) {
+        const yearsToWait = olderAge - 2 * youngerAge + 14;
+        if (yearsToWait > 0) {
+          futureAcceptance = {
+            years: Math.ceil(yearsToWait),
+            date: (new Date().getFullYear() + Math.ceil(yearsToWait)).toString(),
+          };
+        }
+      }
+
       return {
         years: Math.abs(a1 - a2),
         months: 0,
         days: 0,
-        totalDays: Math.abs(a1 - a2) * 365,
+        totalDays: Math.abs(a1 - a2) * 365.25,
         older: a1 > a2 ? "Person 1" : "Person 2",
-        ratio: Math.max(a1, a2) / Math.min(a1, a2) || 1,
-        ruleCheck: checkRule(a1, a2),
+        age1: a1,
+        age2: a2,
+        ratio,
+        ruleCheck,
+        futureAcceptance,
       };
     }
   }, [mode, dob1, dob2, age1, age2]);
@@ -91,6 +156,8 @@ export default function AgeGapCalculator() {
     setAge2("25");
   };
 
+  const today = format(new Date(), "yyyy-MM-dd");
+
   return (
     <div className="max-w-5xl mr-auto animate-fade-in">
       <div className="mb-6">
@@ -102,7 +169,7 @@ export default function AgeGapCalculator() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
         <div className="lg:col-span-2 space-y-6">
           <Card>
             <CardHeader>
@@ -126,6 +193,8 @@ export default function AgeGapCalculator() {
                       <Label>Person 1 DOB</Label>
                       <input
                         type="date"
+                        max={today}
+                 
                         value={dob1}
                         onChange={(e) => setDob1(e.target.value)}
                       />
@@ -134,6 +203,8 @@ export default function AgeGapCalculator() {
                       <Label>Person 2 DOB</Label>
                       <input
                         type="date"
+                        max={today}
+                    
                         value={dob2}
                         onChange={(e) => setDob2(e.target.value)}
                       />
@@ -143,19 +214,21 @@ export default function AgeGapCalculator() {
 
                 <TabsContent value="age" className="space-y-6">
                   <div className="grid sm:grid-cols-2 gap-6">
-                    <div className="space-y-2">
+                    <div className="grid gap-2">
                       <Label>Person 1 Age</Label>
                       <Input
                         type="number"
+                        min="0"
                         value={age1}
                         onChange={(e) => setAge1(e.target.value)}
                         placeholder="e.g. 30"
                       />
                     </div>
-                    <div className="space-y-2">
+                    <div className="grid gap-2">
                       <Label>Person 2 Age</Label>
                       <Input
                         type="number"
+                        min="0"
                         value={age2}
                         onChange={(e) => setAge2(e.target.value)}
                         placeholder="e.g. 25"
@@ -174,109 +247,190 @@ export default function AgeGapCalculator() {
           </Card>
 
           {/* Visual Comparison */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Visual Comparison</CardTitle>
-            </CardHeader>
-            <CardContent className="py-10">
-              <div className="flex items-center justify-between gap-4 max-w-md mx-auto">
-                <div className="flex flex-col items-center gap-2">
-                  <div className="h-20 w-20 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary/20">
-                    <User className="h-10 w-10 text-primary" />
-                  </div>
-                  <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                    Person 1
-                  </p>
-                </div>
+          {results && !results.error && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Visual Comparison</CardTitle>
+              </CardHeader>
+              <CardContent className="py-10">
+                <div className="flex flex-col gap-10">
+                  <div className="flex items-center justify-between gap-4 max-w-md mx-auto w-full">
+                    <div className="flex flex-col items-center gap-2">
+                      <div 
+                        className={cn(
+                          "rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary/20 transition-all",
+                          (results.age1 ?? 0) > (results.age2 ?? 0) ? "h-20 w-20" : "h-16 w-16"
+                        )}
+                      >
+                        <User className={cn("text-primary", (results.age1 ?? 0) > (results.age2 ?? 0) ? "h-10 w-10" : "h-8 w-8")} />
+                      </div>
+                      <div className="text-center">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                          Person 1
+                        </p>
+                        <p className="text-sm font-black text-primary">{results.age1}</p>
+                      </div>
+                    </div>
 
-                <div className="flex-1 flex flex-col items-center">
-                  <div className="h-px w-full bg-muted-foreground/20 relative">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-3 py-1 border rounded-full text-xs font-bold num">
-                      {results?.years}Y {results?.months}M
+                    <div className="flex-1 flex flex-col items-center">
+                      <div className="h-px w-full bg-muted-foreground/20 relative">
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-3 py-1 border rounded-full text-[10px] font-bold whitespace-nowrap num">
+                          {results.years}Y {results.months}M {results.days}D
+                        </div>
+                      </div>
+                      <p className="mt-4 text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">
+                        Difference
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col items-center gap-2">
+                      <div 
+                        className={cn(
+                          "rounded-full bg-secondary/10 flex items-center justify-center border-2 border-secondary/20 transition-all",
+                          (results.age2 ?? 0) > (results.age1 ?? 0) ? "h-20 w-20" : "h-16 w-16"
+                        )}
+                      >
+                        <User className={cn("text-secondary", (results.age2 ?? 0) > (results.age1 ?? 0) ? "h-10 w-10" : "h-8 w-8")} />
+                      </div>
+                      <div className="text-center">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                          Person 2
+                        </p>
+                        <p className="text-sm font-black text-secondary"> {results.age2}</p>
+                      </div>
                     </div>
                   </div>
-                  <p className="mt-4 text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">
-                    Difference
-                  </p>
-                </div>
 
-                <div className="flex flex-col items-center gap-2">
-                  <div className="h-16 w-16 rounded-full bg-secondary/10 flex items-center justify-center border-2 border-secondary/20">
-                    <User className="h-8 w-8 text-secondary" />
-                  </div>
-                  <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                    Person 2
-                  </p>
+                  {results.futureAcceptance && (
+                    <div className="max-w-xs mx-auto w-full">
+                      <div className="flex items-center gap-2 mb-2 justify-center">
+                        <div className="h-px flex-1 bg-blue-500/20" />
+                        <span className="text-[10px] font-bold text-blue-500 uppercase tracking-widest">Growth Path</span>
+                        <div className="h-px flex-1 bg-blue-500/20" />
+                      </div>
+                      <div className="flex items-center justify-center gap-4 bg-blue-500/5 p-3 rounded-lg border border-blue-500/10 border-dashed">
+                        <div className="text-center">
+                          <p className="text-[10px] font-bold text-muted-foreground uppercase">Now</p>
+                          <p className="text-xs font-bold text-orange-500">Outside</p>
+                        </div>
+                        <ArrowRight className="h-3 w-3 text-blue-400" />
+                        <div className="text-center">
+                          <p className="text-[10px] font-bold text-muted-foreground uppercase">In {results.futureAcceptance.years}Y</p>
+                          <p className="text-xs font-bold text-green-500">Accepted</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          )}
+
+          {results?.error && (
+            <div className="p-6 rounded-xl bg-destructive/10 border border-destructive/20 flex gap-4 items-center animate-pulse">
+              <AlertCircle className="h-6 w-6 text-destructive" />
+              <p className="text-sm font-medium text-destructive">
+                {results.error}
+              </p>
+            </div>
+          )}
         </div>
 
-        <div className="space-y-6 h-fit">
-          <Card className="h-full border-t-4 border-t-primary overflow-hidden">
+        <div className="space-y-6 h-full">
+          <Card className="flex flex-col gap-4 h-full border-t-4 border-t-primary ">
             <CardHeader className="bg-muted/30">
               <CardTitle className="text-lg">Result Insights</CardTitle>
             </CardHeader>
-            <CardContent className="pt-8 space-y-8">
-              <div className="text-center">
-                <p className="text-6xl font-black text-primary num">
-                  {results?.years}
-                </p>
-                <p className="text-[10px] uppercase font-bold text-muted-foreground mt-2 tracking-widest">
-                  Years Difference
-                </p>
-              </div>
+            <CardContent className="pt-8 flex flex-col gap-6 h-full">
+              {!results || results.error ? (
+                <div className="flex flex-col items-center justify-center h-40 text-muted-foreground">
+                  <Info className="h-8 w-8 mb-2 opacity-20" />
+                  <p className="text-xs">Waiting for valid input...</p>
+                </div>
+              ) : (
+                <>
+                  <div className="text-center">
+                    <p className="text-6xl font-black text-primary num">
+                      {results.years}
+                    </p>
+                    <p className="text-[10px] uppercase font-bold text-muted-foreground mt-2 tracking-widest">
+                      Years Difference
+                    </p>
+                  </div>
 
-              <div className="space-y-4">
-                <SummaryItem label="Older Person" value={results?.older} />
-                <SummaryItem
-                  label="Total Days"
-                  value={results?.totalDays.toLocaleString()}
-                />
-                <SummaryItem
-                  label="Age Ratio"
-                  value={`${results?.ratio.toFixed(2)}x`}
-                />
-              </div>
+                  <div className="space-y-4">
+                    <SummaryItem label="Older Person" value={results.older} />
+                    <SummaryItem
+                      label="Total Days"
+                      value={results.totalDays?.toLocaleString() ?? "0"}
+                    />
+                    <SummaryItem
+                      label="Age Ratio"
+                      value={`${results.ratio?.toFixed(2) ?? "1.00"}x`}
+                    />
+                  </div>
 
-              <div
-                className={cn(
-                  "p-4 rounded-xl border flex gap-3",
-                  results?.ruleCheck
-                    ? "bg-green-500/5 border-green-500/20"
-                    : "bg-orange-500/5 border-orange-500/20",
-                )}
-              >
-                <Heart
-                  className={cn(
-                    "h-5 w-5 shrink-0",
-                    results?.ruleCheck ? "text-green-500" : "text-orange-500",
-                  )}
-                />
-                <div>
-                  <p className="text-xs font-bold uppercase mb-1">
-                    Standard Rule
-                  </p>
-                  <p className="text-[10px] text-muted-foreground leading-relaxed">
-                    According to the "Half your age plus seven" rule, this gap
-                    is
-                    <span
+                  <div className="flex-1 flex flex-col justify-end gap-4">
+                    {results.futureAcceptance && (
+                      <div className="p-4 rounded-xl border bg-blue-500/5 border-blue-500/20 flex gap-3">
+                        <Calendar className="h-5 w-5 shrink-0 text-blue-500" />
+                        <div>
+                          <p className="text-xs font-bold uppercase mb-1">
+                            Future Acceptance
+                          </p>
+                          <p className="text-[10px] text-muted-foreground leading-relaxed">
+                            This gap will meet the standard rule in
+                            <span className="font-bold mx-1 text-blue-600">
+                              {results.futureAcceptance.years} years
+                            </span>
+                            (around year {results.futureAcceptance.date}).
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    <div
                       className={cn(
-                        "font-bold mx-1",
-                        results?.ruleCheck
-                          ? "text-green-600"
-                          : "text-orange-600",
+                        "p-4 rounded-xl border flex gap-3",
+                        results.ruleCheck
+                          ? "bg-green-500/5 border-green-500/20"
+                          : "bg-orange-500/5 border-orange-500/20",
                       )}
                     >
-                      {results?.ruleCheck
-                        ? "Socially Accepted"
-                        : "Outside Standard"}
-                    </span>
-                    .
-                  </p>
-                </div>
-              </div>
+                      <Heart
+                        className={cn(
+                          "h-5 w-5 shrink-0",
+                          results.ruleCheck
+                            ? "text-green-500"
+                            : "text-orange-500",
+                        )}
+                      />
+                      <div>
+                        <p className="text-xs font-bold uppercase mb-1">
+                          Standard Rule
+                        </p>
+                        <p className="text-[10px] text-muted-foreground leading-relaxed">
+                          According to the "Half your age plus seven" rule, this
+                          gap is
+                          <span
+                            className={cn(
+                              "font-bold mx-1",
+                              results.ruleCheck
+                                ? "text-green-600"
+                                : "text-orange-600",
+                            )}
+                          >
+                            {results.ruleCheck
+                              ? "Socially Accepted"
+                              : "Outside Standard"}
+                          </span>
+                          .
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
             </CardContent>
           </Card>
         </div>
