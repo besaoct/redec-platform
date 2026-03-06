@@ -142,6 +142,7 @@
   --animate-accordion-up: accordion-up 0.2s ease-out;
   --animate-fade-in: fade-in 0.4s ease-out;
 
+
   @keyframes accordion-down {
     from {
       height: 0;
@@ -170,6 +171,7 @@
   }
 }
 
+
 @layer base {
   * {
     @apply border-border;
@@ -192,6 +194,23 @@
   button {
     @apply outline-none hover:bg-accent hover:text-accent-foreground;
   }
+
+  input[type="date"] {
+  @apply h-9 bg-input py-2 px-3 rounded focus:outline-0 ;
+
+  background-image: url('/icons/calculators/age.svg');
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 1rem;
+  cursor: pointer;
+  
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  cursor: pointer;
+}
+
 
   input[type="color"] {
     /* Reset the ugly default look */
@@ -226,6 +245,15 @@
   .num {
     @apply font-extrabold font-display tabular-nums;
   }
+
+  .custom-date-picker {
+  /* Style your custom input here, for example: */
+  padding-right: 30px; 
+  background-image: url('/icons/calculators/age.svg');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+}
 }
 
 

@@ -84,7 +84,7 @@ export default function AgeCalculator() {
             <CardContent className="flex gap-4 flex-wrap w-full">
                <div className="flex flex-col gap-2 flex-1">
                 <Label htmlFor="birth">Date of Birth</Label>
-                <Input
+                <input
                   id="birth"
                   type="date"
                   value={birthDate}
@@ -93,7 +93,7 @@ export default function AgeCalculator() {
               </div>
               <div className="flex flex-col gap-2 flex-1">
                 <Label htmlFor="target">Age at the Date of</Label>
-                <Input
+                <input
                   id="target"
                   type="date"
                   value={targetDate}
