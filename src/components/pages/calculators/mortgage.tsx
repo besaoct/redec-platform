@@ -88,14 +88,14 @@ export default function MortgageCalculator() {
               </div>
 
               <div className="grid sm:grid-cols-2 gap-6">
-                <div className="space-y-2">
+                   <div className="grid gap-2">
                   <Label htmlFor="rate">Interest Rate (%)</Label>
                   <div className="relative">
                     <Percent className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input id="rate" type="number" step="0.1" className="pl-10" value={interestRate} onChange={(e) => setInterestRate(parseFloat(e.target.value))} />
                   </div>
                 </div>
-                <div className="space-y-2">
+                   <div className="grid gap-2">
                   <Label htmlFor="term">Loan Term (Years)</Label>
                   <div className="relative">
                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />

@@ -93,7 +93,7 @@ export default function GradeCalculator() {
         <p className="text-muted-foreground mt-2">Calculate your current class grade and what you need on finals</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
         <div className="lg:col-span-2 space-y-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
@@ -166,8 +166,8 @@ export default function GradeCalculator() {
               <CardDescription>What overall grade are you aiming for?</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center gap-4">
-                <div className="flex-1 max-w-50">
+              <div className="grid items-center gap-4">
+                <div className="flex flex-col gap-2 w-full">
                   <Label htmlFor="target">Desired Grade (%)</Label>
                   <Input
                     id="target"
@@ -176,9 +176,9 @@ export default function GradeCalculator() {
                     onChange={(e) => setTargetGrade(e.target.value)}
                   />
                 </div>
-                <div className="flex-1">
+                <div className="w-full">
                    {stats.neededOnRemaining !== null && (
-                     <div className="p-4 bg-primary/5 rounded-lg border border-primary/10">
+                     <div className="p-4 bg-primary/5 rounded border border-primary/10">
                         <p className="text-xs font-bold uppercase text-primary mb-1">Needed on remaining</p>
                         <p className="text-2xl font-black">
                           {stats.neededOnRemaining.toFixed(2)}%
@@ -191,12 +191,13 @@ export default function GradeCalculator() {
           </Card>
         </div>
 
-        <div className="space-y-6">
-          <Card className="h-full border-t-4 border-t-primary">
+        <div className="h-fit">
+          <Card className="border-t-4 border-t-primary h-full flex flex-col">
             <CardHeader>
               <CardTitle className="text-lg">Overall Result</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className=" h-full flex flex-col gap-4">
+            
               <div className="text-center py-6 bg-muted/30 rounded-xl">
                 <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">Current Average</p>
                 <p className="text-5xl font-black text-primary">{stats.average.toFixed(2)}%</p>
@@ -214,9 +215,11 @@ export default function GradeCalculator() {
                 </p>
               )}
 
-              <Button variant="outline" className="w-full" onClick={reset}>
+            <div className="flex-1 flex flex-col justify-end">
+               <Button variant="outline" className="w-full" onClick={reset}>
                 <RefreshCcw className="mr-2 h-4 w-4" /> Reset All
               </Button>
+            </div>
             </CardContent>
           </Card>
         </div>

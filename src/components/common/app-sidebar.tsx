@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { NavLink } from "./nav-link";
 import Image from "next/image";
 import { tools } from "@/data/tools";
+import { SVGIcon } from "@/components/common/svg-icon";
 
 import {
   Sidebar,
@@ -19,6 +20,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import TextLogo from "./text-logo";
+import { cn } from "@/lib/utils";
 
 export function AppSidebar() {
   const { state, setOpenMobile, isMobile } = useSidebar();
@@ -90,7 +92,14 @@ export function AppSidebar() {
                         className="hover:bg-sidebar-accent/50"
                         activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
                       >
-                        <item.icon className="mr-2 h-4 w-4" />
+                        <SVGIcon
+                          src={item.icon}
+                          className={cn(
+                            "mr-2 h-4 w-4 transition-all bg-foreground/70",
+                            isActive(item.url) ? "bg-primary" : "group-hover:bg-foreground"
+                          )}
+                        />
+
                         {!collapsed && <span>{item.title}</span>}
                       </NavLink>
                     </SidebarMenuButton>

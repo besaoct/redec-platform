@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Sigma, RefreshCcw, Copy, Hash, ArrowUp01, Equal, List,  } from "lucide-react";
+import { Sigma, RefreshCcw, Copy, Hash, ArrowUp01, Equal, List, FormInput, Text,  } from "lucide-react";
 import { toast } from "sonner";
 
 export default function AverageCalculator() {
@@ -73,7 +73,7 @@ export default function AverageCalculator() {
           <Card>
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
-                <List className="h-5 w-5 text-primary" />
+                <Text className="h-5 w-5 text-primary" />
                 Input Data
               </CardTitle>
               <CardDescription>Enter numbers separated by commas, spaces, or new lines</CardDescription>
@@ -144,7 +144,7 @@ function ResultCard({ label, value, icon: Icon, onCopy }: { label: string, value
           </div>
           <div>
             <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">{label}</p>
-            <p className="text-xl font-black">{value ?? "—"}</p>
+            <p className="text-xl font-extrabold">{value ?? "—"}</p>
           </div>
         </div>
         <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity" onClick={onCopy}>

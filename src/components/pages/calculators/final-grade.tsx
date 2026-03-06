@@ -47,14 +47,14 @@ export default function FinalGradeCalculator() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid sm:grid-cols-2 gap-6">
-                <div className="space-y-2">
+                   <div className="grid gap-2">
                   <Label htmlFor="current">Current Grade (%)</Label>
                   <div className="relative">
                     <GraduationCap className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input id="current" type="number" className="pl-10" value={currentGrade} onChange={(e) => setCurrentGrade(e.target.value)} />
                   </div>
                 </div>
-                <div className="space-y-2">
+                   <div className="grid gap-2">
                   <Label htmlFor="target">Target Grade (%)</Label>
                   <div className="relative">
                     <Target className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -62,7 +62,7 @@ export default function FinalGradeCalculator() {
                   </div>
                 </div>
               </div>
-              <div className="space-y-2">
+                 <div className="grid gap-2">
                 <Label htmlFor="weight">Final Exam Weight (%)</Label>
                 <div className="relative">
                   <Percent className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />

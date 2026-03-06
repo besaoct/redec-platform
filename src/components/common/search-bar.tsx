@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { tools } from "@/data/tools";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { SVGIcon } from "@/components/common/svg-icon";
 
 export function SearchBar() {
   const [query, setQuery] = useState("");
@@ -256,7 +257,10 @@ export function SearchBar() {
                           : "bg-muted text-muted-foreground",
                       )}
                     >
-                      <item.icon className="h-4 w-4" />
+                      <SVGIcon
+                        src={item.icon}
+                        className="h-4 min-w-4 transition-all flex items-center justify-center"
+                      />
                     </div>
 
                     <div className="flex-1 min-w-0">

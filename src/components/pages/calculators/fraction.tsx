@@ -83,12 +83,12 @@ export default function FractionCalculator() {
       <div className="grid gap-8">
         <Card>
           <CardContent className="pt-8">
-            <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12">
+            <div className="flex flex-col lg:flex-row items-center justify-center lg:justify-start gap-8 lg:gap-12">
               {/* Fraction 1 */}
               <FractionInput n={n1} d={d1} onNChange={setN1} onDChange={setD1} label="Fraction 1" />
 
               {/* Operator */}
-              <div className="flex flex-wrap justify-center gap-2">
+              <div className="flex flex-wrap justify-center gap-2 lg:mt-6">
                 <OpButton active={op === "add"} icon={Plus} onClick={() => setOp("add")} />
                 <OpButton active={op === "subtract"} icon={Minus} onClick={() => setOp("subtract")} />
                 <OpButton active={op === "multiply"} icon={X} onClick={() => setOp("multiply")} />
@@ -98,7 +98,7 @@ export default function FractionCalculator() {
               {/* Fraction 2 */}
               <FractionInput n={n2} d={d2} onNChange={setN2} onDChange={setD2} label="Fraction 2" />
 
-              <div className="hidden md:block">
+              <div className="hidden lg:block lg:mt-6">
                 <Equal className="h-8 w-8 text-muted-foreground" />
               </div>
 
@@ -116,8 +116,8 @@ export default function FractionCalculator() {
               </div>
             </div>
 
-            <div className="mt-12 flex justify-center">
-              <Button variant="outline" size="sm" onClick={reset}>
+            <div className="mt-12 flex justify-center lg:justify-start">
+              <Button variant="default" size="sm" onClick={reset}>
                 <RefreshCcw className="mr-2 h-4 w-4" /> Reset Calculator
               </Button>
             </div>

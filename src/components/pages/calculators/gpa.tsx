@@ -151,11 +151,11 @@ export default function GPACalculator() {
               <CardDescription>Include your previous records for cumulative calculation</CardDescription>
             </CardHeader>
             <CardContent className="grid sm:grid-cols-2 gap-6">
-              <div className="space-y-2">
+                 <div className="grid gap-2">
                 <Label>Prior GPA</Label>
                 <Input type="number" step="0.01" value={priorGPA} onChange={(e) => setPriorGPA(e.target.value)} placeholder="e.g. 3.50" />
               </div>
-              <div className="space-y-2">
+                 <div className="grid gap-2">
                 <Label>Prior Credits</Label>
                 <Input type="number" value={priorCredits} onChange={(e) => setPriorCredits(e.target.value)} placeholder="e.g. 60" />
               </div>
@@ -163,7 +163,7 @@ export default function GPACalculator() {
           </Card>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 h-fit">
           <Card className="h-full border-t-4 border-t-primary overflow-hidden">
             <CardHeader className="bg-muted/30">
               <CardTitle className="text-lg">Results</CardTitle>

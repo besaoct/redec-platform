@@ -142,7 +142,7 @@ export default function AspectRatioCalculator() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="space-y-2">
+               <div className="grid gap-2">
                   <Label htmlFor="width">Width (px)</Label>
                   <div className="relative">
                     <MoveHorizontal className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -156,7 +156,7 @@ export default function AspectRatioCalculator() {
                     />
                   </div>
                 </div>
-                <div className="space-y-2">
+                <div className="grid gap-2">
                   <Label htmlFor="height">Height (px)</Label>
                   <div className="relative">
                     <MoveVertical className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -184,7 +184,7 @@ export default function AspectRatioCalculator() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="space-y-2">
+                <div className="grid gap-2">
                   <Label htmlFor="ratioW">Ratio Width</Label>
                   <Input
                     id="ratioW"
@@ -194,7 +194,7 @@ export default function AspectRatioCalculator() {
                     onChange={(e) => handleRatioWChange(e.target.value)}
                   />
                 </div>
-                <div className="space-y-2">
+   <div className="grid gap-2">
                   <Label htmlFor="ratioH">Ratio Height</Label>
                   <Input
                     id="ratioH"

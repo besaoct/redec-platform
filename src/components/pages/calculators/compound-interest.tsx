@@ -72,25 +72,25 @@ export default function CompoundInterestCalculator() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid sm:grid-cols-2 gap-6">
-                <div className="space-y-2">
+                   <div className="grid gap-2">
                   <Label htmlFor="initial">Initial Investment (Money)</Label>
                   <Input id="initial" type="number" value={initialAmount} onChange={(e) => setInitialInvestment(e.target.value)} />
                 </div>
-                <div className="space-y-2">
+                   <div className="grid gap-2">
                   <Label htmlFor="monthly">Monthly Contribution (Money)</Label>
                   <Input id="monthly" type="number" value={monthlyContribution} onChange={(e) => setMonthlyContribution(e.target.value)} />
                 </div>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-6">
-                <div className="space-y-2">
+                   <div className="grid gap-2">
                   <Label htmlFor="years">Time Horizon (Years)</Label>
                   <div className="relative">
                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input id="years" type="number" className="pl-10" value={years} onChange={(e) => setYears(e.target.value)} />
                   </div>
                 </div>
-                <div className="space-y-2">
+                   <div className="grid gap-2">
                   <Label htmlFor="rate">Annual Interest Rate (%)</Label>
                   <div className="relative">
                     <Percent className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -99,7 +99,7 @@ export default function CompoundInterestCalculator() {
                 </div>
               </div>
 
-              <div className="space-y-2">
+                 <div className="grid gap-2">
                 <Label>Compounding Frequency</Label>
                 <Select value={compoundFrequency} onValueChange={setCompoundFrequency}>
                   <SelectTrigger>
@@ -123,7 +123,7 @@ export default function CompoundInterestCalculator() {
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 h-fit">
           <Card className="h-full border-t-4 border-t-primary overflow-hidden">
             <CardHeader className="bg-muted/30">
               <CardTitle className="text-lg">Future Value</CardTitle>

@@ -1,15 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { tools } from "@/data/tools";
+import { cn } from "@/lib/utils";
+import { SVGIcon } from "@/components/common/svg-icon";
 
 const Index = () => {
   return (
@@ -36,7 +36,10 @@ const Index = () => {
                   <CardHeader>
                     <div className="flex items-center gap-3 mb-1">
                       <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                        <tool.icon className="h-5 w-5" />
+                        <SVGIcon
+                          src={tool.icon}
+                              className="h-5 min-w-5 transition-all flex items-center justify-center"
+                        />
                       </div>
                       <CardTitle className="text-lg">{tool.title}</CardTitle>
                     </div>
