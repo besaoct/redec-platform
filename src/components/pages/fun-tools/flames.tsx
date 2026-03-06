@@ -10,15 +10,7 @@ import { Heart, RefreshCcw, User, Share2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-
-const FLAMES_MAP = {
-  F: { label: "Friends", color: "text-blue-500", icon: "🤝" },
-  L: { label: "Lovers", color: "text-red-500", icon: "❤️" },
-  A: { label: "Affection", color: "text-pink-500", icon: "🥰" },
-  M: { label: "Marriage", color: "text-purple-500", icon: "💍" },
-  E: { label: "Enemies", color: "text-orange-500", icon: "😈" },
-  S: { label: "Siblings", color: "text-green-500", icon: "👫" },
-};
+import { FLAMES_MAP, type FlamesResult } from "@/data/tools/flames";
 
 export default function Flames() {
   const searchParams = useSearchParams();
@@ -27,7 +19,7 @@ export default function Flames() {
 
   const [name1, setName1] = useState(searchParams.get("n1") || "");
   const [name2, setName2] = useState(searchParams.get("n2") || "");
-  const [result, setResult] = useState<keyof typeof FLAMES_MAP | null>(null);
+  const [result, setResult] = useState<FlamesResult | null>(null);
   const [copied, setCopied] = useState(false);
 
   const calculateFlames = useCallback((n1Str: string, n2Str: string) => {
@@ -49,7 +41,7 @@ export default function Flames() {
     }
 
     const count = n1.length + n2.length;
-    if (count === 0) return "S" as keyof typeof FLAMES_MAP;
+    if (count === 0) return "S" as FlamesResult;
 
     let flames = ["F", "L", "A", "M", "E", "S"];
     let pos = 0;
@@ -58,14 +50,14 @@ export default function Flames() {
       flames.splice(pos, 1);
     }
 
-    return flames[0] as keyof typeof FLAMES_MAP;
+    return flames[0] as FlamesResult;
   }, []);
 
   // Sync and validate result from search params
   useEffect(() => {
     const n1 = searchParams.get("n1");
     const n2 = searchParams.get("n2");
-    const r = searchParams.get("r") as keyof typeof FLAMES_MAP;
+    const r = searchParams.get("r") as FlamesResult;
 
     if (n1 && n2) {
       const calculatedResult = calculateFlames(n1, n2);

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function BondTesterPage() {
   return (
-    <Suspense fallback={<div className="animate-pulse h-96 bg-muted rounded-xl" />}>
+    <Suspense fallback={<></>}>
       <BondTester />
     </Suspense>
   );

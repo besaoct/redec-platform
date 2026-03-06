@@ -2,29 +2,21 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent,  CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Heart, RefreshCcw, User, Share2, Check } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Progress } from "@/components/ui/progress";
-
-const LOVE_MESSAGES = [
-  { min: 0, max: 20, message: "Maybe just friends? The spark is a bit quiet here.", emoji: "🧊" },
-  { min: 21, max: 40, message: "A flickering flame. Needs some work but there's potential!", emoji: "🌱" },
-  { min: 41, max: 60, message: "A solid connection! There's definitely something special here.", emoji: "🤝" },
-  { min: 61, max: 80, message: "Strong chemistry! You two make a great pair.", emoji: "✨" },
-  { min: 81, max: 95, message: "Incredible match! This could be the real deal.", emoji: "🔥" },
-  { min: 96, max: 100, message: "Pure Soulmates! A match made in heaven.", emoji: "💘" },
-];
+import { LOVE_MESSAGES } from "@/data/tools/love-calculator";
 
 export default function LoveCalculator() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname= usePathname();
+
 
   const [name1, setName1] = useState(searchParams.get("n1") || "");
   const [name2, setName2] = useState(searchParams.get("n2") || "");
