@@ -166,7 +166,7 @@ function TotalItem({ label, value }: { label: string, value?: string }) {
   return (
     <div className="flex justify-between items-center py-2 border-b last:border-0 border-muted/50">
       <span className="text-sm text-muted-foreground">{label}</span>
-      <span className="font-mono font-bold">{value ?? "—"}</span>
+      <span className="font-bold">{value ?? "—"}</span>
     </div>
   );
 }

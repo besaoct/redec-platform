@@ -148,7 +148,7 @@ export default function FractionCalculator() {
                 <CardTitle className="text-lg">Decimal Value</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-black font-mono">{result.decimal}</div>
+                <div className="text-3xl font-black">{result.decimal}</div>
               </CardContent>
             </Card>
           </div>
@@ -175,14 +175,14 @@ function FractionInput({ n, d, onNChange, onDChange, label }: any) {
         type="number"
         value={n}
         onChange={(e) => onNChange(e.target.value)}
-        className="w-20 text-center font-bold text-lg"
+        className="w-20 text-center font-bold text-lg border-0"
       />
       <div className="w-16 h-0.5 bg-muted-foreground/30" />
       <Input
         type="number"
         value={d}
         onChange={(e) => onDChange(e.target.value)}
-        className={cn("w-20 text-center font-bold text-lg", parseInt(d) === 0 && "border-destructive text-destructive")}
+        className={cn("w-20 text-center font-bold text-lg border-0", parseInt(d) === 0 && "border-destructive text-destructive")}
       />
     </div>
   );

@@ -1,12 +1,12 @@
 'use client'
 
-import { useState,  useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Monitor, RefreshCcw, Share2,  Maximize2, MoveHorizontal, MoveVertical } from "lucide-react";
+import { Monitor, RefreshCcw, Share2, Maximize2, MoveHorizontal, MoveVertical, Smartphone, Laptop, Tv, Tablet } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { COMMON_RATIOS } from "@/data/tools/calculators/aspect-ratio";
@@ -20,11 +20,6 @@ export default function AspectRatioCalculator() {
   const [h, setH] = useState(searchParams.get("h") || "1080");
   const [rw, setRw] = useState(searchParams.get("rw") || "16");
   const [rh, setRh] = useState(searchParams.get("rh") || "9");
-  const [copied, setCopied] = useState(false);
-
-  const calculateGcd = (a: number, b: number): number => {
-    return b === 0 ? a : calculateGcd(b, a % b);
-  };
 
   const updateUrl = useCallback((params: Record<string, string>) => {
     const newParams = new URLSearchParams(searchParams.toString());
@@ -41,7 +36,7 @@ export default function AspectRatioCalculator() {
     const ratioW = parseFloat(rw);
     const ratioH = parseFloat(rh);
     if (!isNaN(width) && !isNaN(ratioW) && !isNaN(ratioH) && ratioW !== 0) {
-      const height = (width * ratioH) / ratioW;
+      const height = Math.round((width * ratioH) / ratioW);
       setH(height.toString());
       updateUrl({ w: val, h: height.toString(), rw, rh });
     }
@@ -53,7 +48,7 @@ export default function AspectRatioCalculator() {
     const ratioW = parseFloat(rw);
     const ratioH = parseFloat(rh);
     if (!isNaN(height) && !isNaN(ratioW) && !isNaN(ratioH) && ratioH !== 0) {
-      const width = (height * ratioW) / ratioH;
+      const width = Math.round((height * ratioW) / ratioH);
       setW(width.toString());
       updateUrl({ w: width.toString(), h: val, rw, rh });
     }
@@ -65,7 +60,7 @@ export default function AspectRatioCalculator() {
     const width = parseFloat(w);
     const ratioH = parseFloat(rh);
     if (!isNaN(ratioW) && !isNaN(width) && !isNaN(ratioH) && ratioW !== 0) {
-      const height = (width * ratioH) / ratioW;
+      const height = Math.round((width * ratioH) / ratioW);
       setH(height.toString());
       updateUrl({ rw: val, h: height.toString() });
     }
@@ -77,7 +72,7 @@ export default function AspectRatioCalculator() {
     const width = parseFloat(w);
     const ratioW = parseFloat(rw);
     if (!isNaN(ratioH) && !isNaN(width) && !isNaN(ratioW) && ratioW !== 0) {
-      const height = (width * ratioH) / ratioW;
+      const height = Math.round((width * ratioH) / ratioW);
       setH(height.toString());
       updateUrl({ rh: val, h: height.toString() });
     }
@@ -88,7 +83,7 @@ export default function AspectRatioCalculator() {
     setRh(ratioH.toString());
     const width = parseFloat(w);
     if (!isNaN(width)) {
-      const height = (width * ratioH) / ratioW;
+      const height = Math.round((width * ratioH) / ratioW);
       setH(height.toString());
       updateUrl({ rw: ratioW.toString(), rh: ratioH.toString(), h: height.toString() });
     }
@@ -109,17 +104,23 @@ export default function AspectRatioCalculator() {
         title: 'Aspect Ratio Calculation',
         text: `Aspect Ratio Calculation: ${w}x${h} with ratio ${rw}:${rh}`,
         url: url,
-      }).catch(() => copyToClipboard(url));
+      }).catch(() => {
+        navigator.clipboard.writeText(url);
+        toast.success("Link copied to clipboard!");
+      });
     } else {
-      copyToClipboard(url);
+      navigator.clipboard.writeText(url);
+      toast.success("Link copied to clipboard!");
     }
   };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    toast.success("Link copied to clipboard!");
-    setTimeout(() => setCopied(false), 2000);
+  const getRatioIcon = (label: string) => {
+    if (label === "9:16") return Smartphone;
+    if (label === "16:9") return Tv;
+    if (label === "21:9") return Monitor;
+    if (label === "4:3") return Laptop;
+    if (label === "3:2" || label === "2:3") return Tablet;
+    return Maximize2;
   };
 
   return (
@@ -224,24 +225,30 @@ export default function AspectRatioCalculator() {
               <CardDescription>Quick presets for standard sizes</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              {COMMON_RATIOS.map((ratio) => (
-                <button
-                  key={ratio.label}
-                  onClick={() => applyCommonRatio(ratio.width, ratio.height)}
-                  className={cn(
-                    "w-full text-left p-3 rounded-lg border transition-all hover:bg-accent group",
-                    rw === ratio.width.toString() && rh === ratio.height.toString()
-                      ? "border-primary bg-primary/5"
-                      : "border-transparent bg-muted/50"
-                  )}
-                >
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-bold">{ratio.label}</span>
-                    <span className="text-[10px] uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">Apply</span>
-                  </div>
-                  <p className="text-xs leading-snug">{ratio.description}</p>
-                </button>
-              ))}
+              {COMMON_RATIOS.map((ratio) => {
+                const Icon = getRatioIcon(ratio.label);
+                return (
+                  <button
+                    key={ratio.label}
+                    onClick={() => applyCommonRatio(ratio.width, ratio.height)}
+                    className={cn(
+                      "w-full text-left p-3 rounded-lg border transition-all hover:bg-accent group",
+                      rw === ratio.width.toString() && rh === ratio.height.toString()
+                        ? "border-primary bg-primary/5"
+                        : "border-transparent bg-muted/50"
+                    )}
+                  >
+                    <div className="flex justify-between items-center mb-1">
+                      <div className="flex items-center gap-2">
+                        <Icon className={cn("h-3.5 w-3.5")} />
+                        <span className="font-bold">{ratio.label}</span>
+                      </div>
+                      <span className="text-[10px] uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">Apply</span>
+                    </div>
+                    <p className="text-xs leading-snug">{ratio.description}</p>
+                  </button>
+                );
+              })}
             </CardContent>
           </Card>
         </div>
@@ -249,29 +256,37 @@ export default function AspectRatioCalculator() {
 
       {/* Visual Preview */}
       <div className="mt-8">
-        <h3 className="text-sm font-semibold mb-4">Visual Preview</h3>
-        <div className="w-full bg-muted/30 rounded-xl p-8 flex items-center justify-center min-h-75 border-2 border-dashed border-muted">
+        <h3 className="text-sm font-semibold mb-4 uppercase tracking-widest text-muted-foreground">Visual Preview</h3>
+        <div className="w-full bg-muted/20 rounded-2xl p-4 sm:p-12 flex items-center justify-center min-h-100 border-2 border-dashed border-muted/50 overflow-hidden">
           <div 
-            className="bg-primary/10 border-2 border-primary rounded shadow-2xl flex items-center justify-center text-primary font-bold transition-all duration-500"
+            className="relative bg-background dark:bg-black border-12 border-border  rounded-[2.5rem] shadow-2xl transition-all duration-500 ease-in-out flex flex-col items-center justify-center overflow-hidden"
             style={{ 
               aspectRatio: `${rw}/${rh}`,
               maxWidth: '100%',
-              maxHeight: '400px',
               width: '100%'
             }}
           >
-            <div className="text-center p-4 num">
-              <div className="text-2xl sm:text-4xl">{rw}:{rh}</div>
-              <div className="text-sm sm:text-lg opacity-60">{w} x {h}</div>
+            {/* Inner Content Area */}
+            <div className="absolute inset-0 bg-primary/5 flex flex-col items-center justify-center p-6 text-center">
+               <div className="p-4 rounded-2xl bg-background/80 backdrop-blur-sm border shadow-sm num animate-in zoom-in-95 duration-300">
+                  <div className="text-3xl sm:text-5xl font-black text-primary mb-1">{rw}:{rh}</div>
+                  <div className="text-xs sm:text-sm font-bold text-muted-foreground uppercase tracking-widest opacity-70">
+                    {w} × {h} Pixels
+                  </div>
+               </div>
+               
+               {/* Small 'Screen' Details */}
+               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-12 h-1 bg-foreground rounded-full opacity-20" />
+               <div className="absolute top-4 left-1/2 -translate-x-1/2 w-8 h-1.5 bg-foreground rounded-full opacity-20" />
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mt-8">
+      <div className="mt-8 bg-muted/30 p-6 rounded-xl border">
         <h3 className="text-sm font-semibold mb-3">How it works</h3>
         <p className="text-xs text-muted-foreground leading-relaxed">
-          Aspect ratio is the proportional relationship between its width and its height. It is commonly expressed as two numbers separated by a colon, as in 16:9. For an x:y aspect ratio, the image is x units wide and y units high. This tool allows you to calculate missing dimensions while maintaining a fixed ratio, or vice versa.
+          Aspect ratio is the proportional relationship between its width and its height. It is commonly expressed as two numbers separated by a colon, as in 16:9. For an x:y aspect ratio, the image is x units wide and y units high. This tool allows you to calculate missing dimensions while maintaining a fixed ratio, or vice versa. The visual preview above simulates how the screen would look with your defined proportions.
         </p>
       </div>
     </div>

@@ -90,7 +90,7 @@ export default function AverageCalculator() {
                 />
               </div>
               <div className="flex gap-3">
-                <Button variant="outline" className="flex-1" onClick={() => setInput("")}>
+                <Button variant="default" className="flex-1" onClick={() => setInput("")}>
                   <RefreshCcw className="mr-2 h-4 w-4" /> Clear
                 </Button>
               </div>
