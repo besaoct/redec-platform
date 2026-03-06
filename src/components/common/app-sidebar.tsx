@@ -36,7 +36,7 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar collapsible="offcanvas" className="h-full min-h-screen">
+    <Sidebar collapsible="offcanvas" className="h-full">
       <SidebarHeader className="h-14 border-b flex items-start px-4">
         <div className="flex my-auto  items-center justify-center gap-3">
           <Image
