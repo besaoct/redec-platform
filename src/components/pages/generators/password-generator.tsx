@@ -78,9 +78,10 @@ export default function PasswordGenerator() {
 
   return (
     <div className="max-w-5xl mr-auto animate-fade-in">
-      <h1 className="text-xl sm:text-3xl font-bold font-display mb-6">Password {" "}
+      <h1 className="text-xl sm:text-3xl font-bold font-display mb-2">Password {" "}
         <span className="text-primary">Generator</span>
       </h1>
+      <p className="text-muted-foreground mb-6 text-sm sm:text-base">Create strong, customizable passwords</p>
       <Card>
         <CardHeader className="px-6 pt-4 pb-4 flex items-center flex-row gap-x-4 flex-wrap w-full ">
           <CardTitle className="text-base">Generated Password</CardTitle>

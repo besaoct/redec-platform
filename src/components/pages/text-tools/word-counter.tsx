@@ -58,7 +58,7 @@ export default function WordCounter() {
 
   return (
     <div className="max-w-5xl mr-auto animate-fade-in">
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+      <div className="flex items-center justify-between mb-2 flex-wrap gap-4">
         <h1 className="text-xl sm:text-3xl font-extrabold font-display">Word {" "}  <span className="text-primary">Counter </span></h1>
         <div className="flex gap-2">
            <Tooltip open={copied}>
@@ -75,6 +75,7 @@ export default function WordCounter() {
           </Button>
         </div>
       </div>
+      <p className="text-muted-foreground mb-6 text-sm sm:text-base">Count words, characters, and check readability</p>
 
       <Textarea
         placeholder="Paste or type your text here…"

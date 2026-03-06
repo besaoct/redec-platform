@@ -32,6 +32,13 @@ export function SearchBar() {
     ).slice(0, 8);
   }, [query, allItems]);
 
+  const handleSelect = (url: string) => {
+    router.push(url);
+    setIsOpen(false);
+    setQuery("");
+    inputRef.current?.blur();
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -40,14 +47,38 @@ export function SearchBar() {
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Toggle search
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         setIsOpen(true);
         setTimeout(() => inputRef.current?.focus(), 50);
+        return;
       }
+
+      if (!isOpen) return;
+
       if (e.key === "Escape") {
         setIsOpen(false);
         inputRef.current?.blur();
+      } else if (e.key === "ArrowDown") {
+        if (filteredItems.length > 0) {
+          e.preventDefault();
+          setActiveIndex(prev => (prev < filteredItems.length - 1 ? prev + 1 : prev));
+        }
+      } else if (e.key === "ArrowUp") {
+        if (filteredItems.length > 0) {
+          e.preventDefault();
+          setActiveIndex(prev => (prev > 0 ? prev - 1 : -1));
+        }
+      } else if (e.key === "Enter") {
+        if (filteredItems.length > 0) {
+          e.preventDefault();
+          if (activeIndex >= 0 && filteredItems[activeIndex]) {
+            handleSelect(filteredItems[activeIndex].url);
+          } else {
+            handleSelect(filteredItems[0].url);
+          }
+        }
       }
     };
 
@@ -57,7 +88,7 @@ export function SearchBar() {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [isOpen, filteredItems, activeIndex]);
 
   useEffect(() => {
     setActiveIndex(-1);
@@ -75,29 +106,6 @@ export function SearchBar() {
     }
   }, [isMobile, isOpen]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setActiveIndex(prev => (prev < filteredItems.length - 1 ? prev + 1 : prev));
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setActiveIndex(prev => (prev > 0 ? prev - 1 : -1));
-    } else if (e.key === "Enter") {
-      if (activeIndex >= 0 && filteredItems[activeIndex]) {
-        handleSelect(filteredItems[activeIndex].url);
-      } else if (filteredItems.length > 0) {
-        handleSelect(filteredItems[0].url);
-      }
-    }
-  };
-
-  const handleSelect = (url: string) => {
-    router.push(url);
-    setIsOpen(false);
-    setQuery("");
-    inputRef.current?.blur();
-  };
-
   // Mobile collapsed view: just an icon
   if (isMobile && !isOpen) {
     return (
@@ -114,118 +122,127 @@ export function SearchBar() {
   const showSuggestions = filteredItems.length > 0;
 
   return (
-    <div ref={containerRef} className={cn(
-      "relative transition-all duration-300",
-      isMobile && isOpen ? "fixed inset-0 z-50 p-4 bg-background h-screen flex flex-col animate-in fade-in slide-in-from-top-4 duration-200" : "w-full max-w-sm lg:max-w-md"
-    )}>
+    <div 
+      ref={containerRef}
+      className={cn(
+        "relative transition-all duration-300",
+        isMobile && isOpen ? "fixed inset-0 z-50 p-4 bg-background h-screen flex flex-col animate-in fade-in slide-in-from-top-4 duration-200" : "w-full max-w-sm lg:max-w-md"
+      )}
+      onClick={(e) => {
+        if (isMobile && isOpen && e.target === e.currentTarget) {
+          setIsOpen(false);
+        }
+      }}
+    >
       {/* Backdrop for desktop */}
       {!isMobile && isOpen && (
-        <div className="fixed inset-0 bg-background/20 backdrop-blur-[2px] z-[-1]" onClick={() => setIsOpen(false)} />
+        <div className="fixed inset-0 bg-background/20 backdrop-blur-[2px] z-[-1]" onMouseDown={() => setIsOpen(false)} />
       )}
+      
+      <div className="w-full h-full flex flex-col">
+        <div className="relative group flex items-center gap-2">
+          {isMobile && (
+            <button 
+              onClick={() => setIsOpen(false)}
+              className="p-2 hover:bg-muted rounded-full transition-colors shrink-0"
+            >
+              <ArrowLeft className="h-5 w-5 text-muted-foreground" />
+            </button>
+          )}
+          <div className="relative flex-1">
+            <Search className="absolute left-3  md:left-0  top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
+            <Input
+              ref={inputRef}
+              placeholder="Search tools..."
+              className={cn(
+                "pl-10 h-11 sm:h-10 bg-muted/40 sm:bg-transparent border-none focus-visible:ring-1 focus-visible:ring-primary/20 sm:focus-visible:ring-transparent shadow-none transition-all rounded sm:rounded-none",
+              )}
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setIsOpen(true);
+              }}
+              onFocus={() => setIsOpen(true)}
+            />
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+              {query && (
+                <button 
+                  onClick={() => { setQuery(""); inputRef.current?.focus(); }}
+                  className="p-1 hover:bg-muted rounded-full transition-colors"
+                >
+                  <X className="h-3.5 w-3.5 text-muted-foreground" />
+                </button>
+              )}
+              {!isMobile && (
+                <div className="hidden sm:flex items-center gap-1 text-[10px] font-medium text-muted-foreground select-none pointer-events-none opacity-50 group-focus-within:opacity-100 transition-opacity">
+                  <kbd className="px-1.5 py-0.5 rounded border bg-background">⌘</kbd>
+                  <kbd className="px-1.5 py-0.5 rounded border bg-background">K</kbd>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
 
-      <div className="relative group flex items-center gap-2">
-        {isMobile && (
-          <button 
-            onClick={() => setIsOpen(false)}
-            className="p-2 hover:bg-muted rounded-full transition-colors shrink-0"
-          >
-            <ArrowLeft className="h-5 w-5 text-muted-foreground" />
-          </button>
-        )}
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
-          <Input
-            ref={inputRef}
-            placeholder="Search tools..."
-            className={cn(
-              "pl-10 h-11 sm:h-10 bg-muted/40 sm:bg-transparent border-none focus-visible:ring-1 focus-visible:ring-primary/20 sm:focus-visible:ring-transparent shadow-none transition-all rounded-xl sm:rounded-none",
-            )}
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setIsOpen(true);
-            }}
-            onFocus={() => setIsOpen(true)}
-            onKeyDown={handleKeyDown}
-          />
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
-            {query && (
-              <button 
-                onClick={() => { setQuery(""); inputRef.current?.focus(); }}
-                className="p-1 hover:bg-muted rounded-full transition-colors"
-              >
-                <X className="h-3.5 w-3.5 text-muted-foreground" />
-              </button>
-            )}
+        {showSuggestions && (
+          <div className={cn(
+            "bg-popover border shadow-2xl overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200",
+            isMobile 
+              ? "relative mt-4 border-none shadow-none bg-transparent flex-1 overflow-y-auto" 
+              : "absolute top-[calc(100%+4px)] w-full rounded min-w-xs"
+          )}>
+            <div className="p-2">
+              <div className="space-y-0.5">
+                {filteredItems.map((item, index) => (
+                  <button
+                    key={item.url}
+                    onClick={() => handleSelect(item.url)}
+                    onMouseEnter={() => !isMobile && setActiveIndex(index)}
+                    className={cn(
+                      "w-full flex items-center gap-3 px-3 py-3 sm:py-2 rounded text-sm transition-colors text-left",
+                      activeIndex === index ? "bg-accent text-accent-foreground" : "hover:bg-accent/50"
+                    )}
+                  >
+                    <div className={cn(
+                      "p-2 rounded-lg transition-colors",
+                      activeIndex === index ? "bg-background shadow-sm text-primary" : "bg-muted text-muted-foreground"
+                    )}>
+                      <item.icon className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium truncate">{item.title}</div>
+                      <div className="text-[11px] text-muted-foreground truncate opacity-80">{item.description}</div>
+                    </div>
+                    {!isMobile && activeIndex === index ? (
+                      <CornerDownLeft className="h-3.5 w-3.5 text-muted-foreground/50 animate-in slide-in-from-right-2" />
+                    ) : (
+                      <span className="text-[10px] text-muted-foreground/40 font-medium px-1.5">{item.category}</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
             {!isMobile && (
-              <div className="hidden sm:flex items-center gap-1 text-[10px] font-medium text-muted-foreground select-none pointer-events-none opacity-50 group-focus-within:opacity-100 transition-opacity">
-                <kbd className="px-1.5 py-0.5 rounded border bg-background">⌘</kbd>
-                <kbd className="px-1.5 py-0.5 rounded border bg-background">K</kbd>
+              <div className="bg-muted/30 p-2.5 border-t flex justify-between items-center text-[10px] text-muted-foreground px-4">
+                 <div className="flex items-center gap-4">
+                    <span className="flex items-center gap-1.5"><kbd className="px-1 rounded border bg-background">↑↓</kbd> navigate</span>
+                    <span className="flex items-center gap-1.5"><kbd className="px-1 rounded border bg-background">↵</kbd> select</span>
+                 </div>
+                 <div className="font-medium opacity-50">
+                    {filteredItems.length} results
+                 </div>
               </div>
             )}
           </div>
-        </div>
+        )}
+        
+        {isMobile && !showSuggestions && query.trim() !== "" && (
+           <div className="flex flex-col items-center justify-center flex-1 text-muted-foreground gap-2 opacity-60">
+              <Search className="h-10 w-10 mb-2" />
+              <p className="text-sm font-medium">No tools found for "{query}"</p>
+           </div>
+        )}
       </div>
-
-      {showSuggestions && (
-        <div className={cn(
-          "bg-popover border shadow-2xl overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200",
-          isMobile 
-            ? "relative mt-4 border-none shadow-none bg-transparent flex-1 overflow-y-auto" 
-            : "absolute top-full w-full rounded-b-2xl border-t-0 min-w-xs"
-        )}>
-          <div className="p-2">
-            <div className="space-y-0.5">
-              {filteredItems.map((item, index) => (
-                <button
-                  key={item.url}
-                  onClick={() => handleSelect(item.url)}
-                  onMouseEnter={() => !isMobile && setActiveIndex(index)}
-                  className={cn(
-                    "w-full flex items-center gap-3 px-3 py-3 sm:py-2 rounded-xl text-sm transition-colors text-left",
-                    activeIndex === index ? "bg-accent text-accent-foreground" : "hover:bg-accent/50"
-                  )}
-                >
-                  <div className={cn(
-                    "p-2 rounded-lg transition-colors",
-                    activeIndex === index ? "bg-background shadow-sm text-primary" : "bg-muted text-muted-foreground"
-                  )}>
-                    <item.icon className="h-4 w-4" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-medium truncate">{item.title}</div>
-                    <div className="text-[11px] text-muted-foreground truncate opacity-80">{item.description}</div>
-                  </div>
-                  {!isMobile && activeIndex === index ? (
-                    <CornerDownLeft className="h-3.5 w-3.5 text-muted-foreground/50 animate-in slide-in-from-right-2" />
-                  ) : (
-                    <span className="text-[10px] text-muted-foreground/40 font-medium px-1.5">{item.category}</span>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-          
-          {!isMobile && (
-            <div className="bg-muted/30 p-2.5 border-t flex justify-between items-center text-[10px] text-muted-foreground px-4">
-               <div className="flex items-center gap-4">
-                  <span className="flex items-center gap-1.5"><kbd className="px-1 rounded border bg-background">↑↓</kbd> navigate</span>
-                  <span className="flex items-center gap-1.5"><kbd className="px-1 rounded border bg-background">↵</kbd> select</span>
-               </div>
-               <div className="font-medium opacity-50">
-                  {filteredItems.length} results
-               </div>
-            </div>
-          )}
-        </div>
-      )}
-      
-      {isMobile && !showSuggestions && query.trim() !== "" && (
-         <div className="flex flex-col items-center justify-center flex-1 text-muted-foreground gap-2 opacity-60">
-            <Search className="h-10 w-10 mb-2" />
-            <p className="text-sm font-medium">No tools found for "{query}"</p>
-         </div>
-      )}
     </div>
   );
 }

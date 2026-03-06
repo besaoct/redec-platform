@@ -115,11 +115,11 @@ export default function UnitConverter() {
 
   return (
     <div className="max-w-5xl mr-auto animate-fade-in">
-      <h1 className="text-xl sm:text-3xl font-display mb-6 font-extrabold">Unit  
+      <h1 className="text-xl sm:text-3xl font-display mb-2 font-extrabold">Unit  
         {" "}
-    <span className="text-primary">   Converter</span>
-
+        <span className="text-primary">   Converter</span>
       </h1>
+      <p className="text-muted-foreground mb-6 text-sm sm:text-base">Convert lengths, weights, temperatures and more</p>
       <Card className="gap-2">
         <CardHeader className="px-6 pt-4 pb-4">
           <CardTitle className="text-base">Select category</CardTitle>

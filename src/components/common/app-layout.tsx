@@ -11,14 +11,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
           <header className="h-14 z-40 sticky top-0 flex w-full items-center gap-4 justify-between border-b px-4 bg-card/80 backdrop-blur-md">
-            <div className="flex items-center gap-2">
+            <div className="md:hidden flex items-center gap-2 ">
               <SidebarTrigger className="md:hidden" />
               <div className="md:sr-only text-sidebar-foreground">
                 <TextLogo />
               </div>
             </div>
             
-            <div className="w-full flex items-center max-w-sm ml-auto">
+            <div className="w-full flex items-center md:max-w-sm mr-auto">
               <SearchBar />
             </div>
 

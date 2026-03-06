@@ -1,4 +1,4 @@
-import { ArrowLeftRight, QrCode, KeyRound, FileText } from "lucide-react";
+import { ArrowLeftRight, QrCode, KeyRound, FileText, Heart } from "lucide-react";
 
 
 export const tools = [
@@ -19,6 +19,12 @@ export const tools = [
     category: "Text Tools",
     items: [
       { title: "Word Counter", description: "Count words, characters, and check readability", icon: FileText, url: "/word-counter" },
+    ],
+  },
+  {
+    category: "Fun Tools",
+    items: [
+      { title: "FLAMES", description: "Discover your relationship status with the classic FLAMES game", icon: Heart, url: "/flames" },
     ],
   },
 ];
