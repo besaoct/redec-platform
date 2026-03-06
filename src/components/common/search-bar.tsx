@@ -252,15 +252,15 @@ export function SearchBar() {
 
                     <div className="flex-1 min-w-0">
                       <div className="font-medium truncate">{item.title}</div>
-                      <div className="text-[11px] text-muted-foreground truncate opacity-80">
+                      <div className="text-[11px] truncate opacity-80">
                         {item.description}
                       </div>
                     </div>
 
                     {!isMobile && activeIndex === index ? (
-                      <CornerDownLeft className="h-3.5 w-3.5 text-muted-foreground/50 animate-in slide-in-from-right-2" />
+                      <CornerDownLeft className="h-3.5 w-3.5 text-background/50  dark:text-muted-foreground/80 animate-in slide-in-from-right-2" />
                     ) : (
-                      <span className="text-[10px] text-muted-foreground/40 font-medium px-1.5">
+                      <span className="text-[10px] text-muted-foreground  font-medium px-1.5">
                         {item.category}
                       </span>
                     )}

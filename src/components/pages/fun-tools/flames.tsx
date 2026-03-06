@@ -27,9 +27,7 @@ export default function Flames() {
 
   const [name1, setName1] = useState(searchParams.get("n1") || "");
   const [name2, setName2] = useState(searchParams.get("n2") || "");
-  const [result, setResult] = useState<keyof typeof FLAMES_MAP | null>(
-    (searchParams.get("r") as keyof typeof FLAMES_MAP) || null
-  );
+  const [result, setResult] = useState<keyof typeof FLAMES_MAP | null>(null);
   const [copied, setCopied] = useState(false);
 
   const calculateFlames = useCallback((n1Str: string, n2Str: string) => {
@@ -62,6 +60,28 @@ export default function Flames() {
 
     return flames[0] as keyof typeof FLAMES_MAP;
   }, []);
+
+  // Sync and validate result from search params
+  useEffect(() => {
+    const n1 = searchParams.get("n1");
+    const n2 = searchParams.get("n2");
+    const r = searchParams.get("r") as keyof typeof FLAMES_MAP;
+
+    if (n1 && n2) {
+      const calculatedResult = calculateFlames(n1, n2);
+      if (calculatedResult) {
+        setResult(calculatedResult);
+        // If the URL result is wrong or missing, fix it
+        if (calculatedResult !== r) {
+          const params = new URLSearchParams(searchParams.toString());
+          params.set("r", calculatedResult);
+          router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+        }
+      }
+    } else {
+      setResult(null);
+    }
+  }, [searchParams, calculateFlames, router, pathname]);
 
   const handleCalculate = () => {
     const res = calculateFlames(name1, name2);
