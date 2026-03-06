@@ -1,12 +1,12 @@
 'use client'
 
 import { useState, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Activity, RefreshCcw, Info, User, Scale } from "lucide-react";
+import { RefreshCcw, Info, Scale } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function BMICalculator() {

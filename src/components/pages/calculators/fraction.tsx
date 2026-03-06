@@ -1,11 +1,11 @@
 'use client'
 
 import { useState, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Divide, RefreshCcw, Plus, Minus, X, ChevronRight, Equal } from "lucide-react";
+import { Divide, RefreshCcw, Plus, Minus, X, Equal } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Operation = "add" | "subtract" | "multiply" | "divide";

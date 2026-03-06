@@ -1,19 +1,16 @@
 'use client'
 
-import { useState, useCallback } from "react";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Percent, RefreshCcw, Share2, Copy, ArrowRight, TrendingUp, HelpCircle } from "lucide-react";
+import { Percent, RefreshCcw,  Copy, ArrowRight, TrendingUp, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 export default function PercentageCalculator() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
+
 
   // 1. What is P% of V?
   const [p1, setP1] = useState("10");

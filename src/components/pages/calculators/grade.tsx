@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { GraduationCap, Plus, Trash2, RefreshCcw, Calculator, Target, BookOpen } from "lucide-react";
+import {Plus, Trash2, RefreshCcw, Target, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Assignment {
@@ -167,7 +167,7 @@ export default function GradeCalculator() {
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-4">
-                <div className="flex-1 max-w-[200px]">
+                <div className="flex-1 max-w-50">
                   <Label htmlFor="target">Desired Grade (%)</Label>
                   <Input
                     id="target"
