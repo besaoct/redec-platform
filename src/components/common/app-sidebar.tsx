@@ -89,14 +89,14 @@ export function AppSidebar() {
                       <NavLink
                         href={item.url}
                         end
-                        className="hover:bg-sidebar-accent/50"
+                        className="hover:bg-sidebar-accent/50 group/nav-item"
                         activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
                       >
                         <SVGIcon
                           src={item.icon}
                           className={cn(
-                            "mr-2 h-4 w-4 transition-all bg-foreground/70",
-                            isActive(item.url) ? "bg-primary" : "group-hover:bg-foreground"
+                            "mr-2 h-4 w-4 transition-all bg-foreground/70 nav",
+                            isActive(item.url) ? "bg-primary" : "group-hover/nav-item:bg-foreground"
                           )}
                         />
 

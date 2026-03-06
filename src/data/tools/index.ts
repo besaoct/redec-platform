@@ -19,6 +19,7 @@ export const tools = [
       { title: "Percentage Calculator", description: "Calculate percentages, increases, and decreases", icon: "/icons/calculators/percentage.svg", url: "/percentage-calculator" },
       { title: "Average Calculator", description: "Calculate mean, median, mode and range", icon: "/icons/calculators/average.svg", url: "/average-calculator" },
       { title: "Age Calculator", description: "Calculate your age in years, months, and days", icon: "/icons/calculators/age.svg", url: "/age-calculator" },
+      { title: "Age Gap Calculator", description: "Calculate the age difference between two people", icon: "/icons/calculators/age-gap.svg", url: "/age-gap-calculator" },
       { title: "Fraction Calculator", description: "Add, subtract, multiply, and divide fractions", icon: "/icons/calculators/fraction.svg", url: "/fraction-calculator" },
       { title: "Grade Calculator", description: "Calculate your weighted grade for a course", icon: "/icons/calculators/grade.svg", url: "/grade-calculator" },
       { title: "GPA Calculator", description: "Calculate your semester and cumulative GPA", icon: "/icons/calculators/gpa.svg", url: "/gpa-calculator" },
@@ -26,7 +27,6 @@ export const tools = [
       { title: "Mortgage Calculator", description: "Estimate your monthly mortgage payments", icon: "/icons/calculators/mortgage.svg", url: "/mortgage-calculator" },
       { title: "Compound Interest", description: "Calculate the future value of your investments", icon: "/icons/calculators/compound-interest.svg", url: "/compound-interest-calculator" },
       { title: "BMI Calculator", description: "Calculate your Body Mass Index and health category", icon: "/icons/calculators/bmi.svg", url: "/bmi-calculator" },
-      { title: "Age Gap Calculator", description: "Calculate the age difference between two people", icon: "/icons/calculators/age-gap.svg", url: "/age-gap-calculator" },
     ],
   },
   {

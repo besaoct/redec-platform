@@ -81,7 +81,7 @@ export default function AgeCalculator() {
                 Date Selection
               </CardTitle>
             </CardHeader>
-            <CardContent className="grid sm:grid-cols-2 gap-6">
+            <CardContent className="grid sm:grid-cols-2 gap-6 w-full">
                <div className="grid gap-2">
                 <Label htmlFor="birth">Date of Birth</Label>
                 <Input
