@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Montserrat, Quicksand } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 import AppProviders from "./providers";
 import { SEO, WEB_URL } from "@/data/constants";
@@ -9,9 +9,10 @@ const fontDisplay = Montserrat({
   subsets: ["latin"],
 });
 
-const fontSans = Quicksand({
+const fontSans = Montserrat({
   variable: "--font-sans",
-  weight: ["700", "600", "500", "400", "300"],
+ subsets: ["latin"],
+  weight: ["700", "600", "500", "400", "300","100","200","800","900"],
 });
 export const metadata: Metadata = {
   metadataBase: new URL(WEB_URL),

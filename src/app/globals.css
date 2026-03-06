@@ -103,7 +103,7 @@
 }
 
 @theme inline {
-  --font-sans: "Quicksand", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Montserrat", sans-serif;
   --font-display: "Montserrat", ui-sans-serif, system-ui, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -177,16 +177,21 @@
 
   body {
     @apply bg-background text-foreground antialiased;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
   }
    
 
-
-  html, body, span, div, input, button, p, h1, h2, h3,h4 {
-    @apply tabular-nums;
+  /* Target numbers specifically if possible, or just use a supporting font for containers with numbers */
+  .num, 
+  input[type="number"],
+  .tabular-nums {
+    font-family: var(--font-display) !important;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
   }
 
   
-
   button {
     @apply outline-none hover:bg-accent hover:text-accent-foreground;
   }
