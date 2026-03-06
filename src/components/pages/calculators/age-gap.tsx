@@ -107,12 +107,12 @@ export default function AgeGapCalculator() {
                 </div>
 
                 <TabsContent value="dob" className="space-y-6">
-                  <div className="grid sm:grid-cols-2 gap-6">
-                    <div className="space-y-2">
+                <div className="flex gap-4 flex-wrap w-full">
+               <div className="flex flex-col gap-2 flex-1">
                       <Label>Person 1 DOB</Label>
                       <Input type="date" value={dob1} onChange={(e) => setDob1(e.target.value)} />
                     </div>
-                    <div className="space-y-2">
+                         <div className="flex flex-col gap-2 flex-1">
                       <Label>Person 2 DOB</Label>
                       <Input type="date" value={dob2} onChange={(e) => setDob2(e.target.value)} />
                     </div>

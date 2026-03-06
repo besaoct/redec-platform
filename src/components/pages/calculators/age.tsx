@@ -81,8 +81,8 @@ export default function AgeCalculator() {
                 Date Selection
               </CardTitle>
             </CardHeader>
-            <CardContent className="grid sm:grid-cols-2 gap-6 w-full">
-               <div className="flex flex-col gap-2">
+            <CardContent className="flex gap-4 flex-wrap w-full">
+               <div className="flex flex-col gap-2 flex-1">
                 <Label htmlFor="birth">Date of Birth</Label>
                 <Input
                   id="birth"
@@ -91,7 +91,7 @@ export default function AgeCalculator() {
                   onChange={(e) => setBirthDate(e.target.value)}
                 />
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 flex-1">
                 <Label htmlFor="target">Age at the Date of</Label>
                 <Input
                   id="target"
