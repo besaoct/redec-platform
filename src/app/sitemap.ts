@@ -1,7 +1,17 @@
 import { MetadataRoute } from "next";
 import { WEB_URL } from "@/data/constants";
+import { tools } from "@/data/tools";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const toolEntries = tools.flatMap((category) =>
+    category.items.map((item) => ({
+      url: `${WEB_URL}${item.url}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    }))
+  );
+
   return [
     {
       url: WEB_URL,
@@ -9,29 +19,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 1,
     },
-    {
-      url: `${WEB_URL}/unit-converter`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${WEB_URL}/password-generator`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${WEB_URL}/qr-generator`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${WEB_URL}/word-counter`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
+    ...toolEntries,
   ];
 }

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function FlamesPage() {
   return (
-    <Suspense fallback={<div className="animate-pulse h-96 bg-muted rounded-xl" />}>
+    <Suspense fallback={<></>}>
       <Flames />
     </Suspense>
   );

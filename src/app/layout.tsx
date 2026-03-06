@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${fontSans.variable} ${fontDisplay.variable} antialiased`}
+        className={`${fontSans.variable} ${fontDisplay.variable} antialiased tabular-nums`}
         cz-shortcut-listen="true"
       >
         <AppProviders>{children}</AppProviders>

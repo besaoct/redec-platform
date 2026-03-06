@@ -1,4 +1,4 @@
-import { ArrowLeftRight, QrCode, KeyRound, FileText, Heart } from "lucide-react";
+import { ArrowLeftRight, QrCode, KeyRound, FileText, Heart, Sparkles, Flame, Users } from "lucide-react";
 
 
 export const tools = [
@@ -25,6 +25,9 @@ export const tools = [
     category: "Fun Tools",
     items: [
       { title: "FLAMES", description: "Discover your relationship status with the classic FLAMES game", icon: Heart, url: "/flames" },
+      { title: "Aura Reader", description: "Discover the color of your energy based on your name and mood", icon: Sparkles, url: "/aura-reader" },
+      { title: "Love Calculator", description: "Test the romantic compatibility between two names", icon: Flame, url: "/love-calculator" },
+      { title: "Bond Tester", description: "Analyze the deep, algorithmic nature of your friendship", icon: Users, url: "/bond-tester" },
     ],
   },
 ];

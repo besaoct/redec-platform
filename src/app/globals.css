@@ -210,3 +210,10 @@
     border: none;
   }
 }
+
+
+@layer utilities {
+  .num {
+    @apply font-extrabold font-display tabular-nums;
+  }
+}

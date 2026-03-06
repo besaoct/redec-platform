@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Search, CornerDownLeft, X, ArrowLeft } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { tools } from "@/data/tools";
@@ -16,6 +16,7 @@ export function SearchBar() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const router = useRouter();
+  const pathname = usePathname();
   const isMobile = useIsMobile();
 
   const allItems = useMemo(() => {
@@ -43,6 +44,13 @@ export function SearchBar() {
     inputRef.current?.blur();
   };
 
+  // Close on route change
+  useEffect(() => {
+    setIsOpen(false);
+    setQuery("");
+    inputRef.current?.blur();
+  }, [pathname]);
+
   // Unified click-outside + keyboard handling
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -51,6 +59,7 @@ export function SearchBar() {
         !containerRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false);
+        setQuery("");
         inputRef.current?.blur();
       }
     };
@@ -94,15 +103,12 @@ export function SearchBar() {
     // Only listen when open
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
-      // Alternative: use "click" instead of "mousedown" if you prefer delay after mouseup
-      // document.addEventListener("click", handleClickOutside);
     }
 
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-      // document.removeEventListener("click", handleClickOutside);
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, filteredItems, activeIndex, handleSelect]);
@@ -156,7 +162,10 @@ export function SearchBar() {
     >
       {/* Desktop visual backdrop only (no click handler here anymore) */}
       {!isMobile && isOpen && (
-        <div className="fixed inset-0 bg-background/20 backdrop-blur-[2px] z-[-1]" />
+        <div 
+          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 bg-background/20 backdrop-blur-[2px] z-[-1]" 
+        />
       )}
 
       <div className="w-full h-full flex flex-col">
