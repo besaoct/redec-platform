@@ -36,7 +36,7 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar collapsible="offcanvas">
+    <Sidebar collapsible="offcanvas" className="h-full min-h-screen">
       <SidebarHeader className="h-14 border-b flex items-start px-4">
         <div className="flex my-auto  items-center justify-center gap-3">
           <Image
@@ -49,7 +49,7 @@ export function AppSidebar() {
           <TextLogo />
         </div>
       </SidebarHeader>
-      <SidebarContent className="py-2 scrollbar-hide">
+      <SidebarContent className="py-2 scrollbar-hide h-full">
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
