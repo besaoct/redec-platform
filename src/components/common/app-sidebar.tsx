@@ -47,7 +47,7 @@ export function AppSidebar() {
           <TextLogo />
         </div>
       </SidebarHeader>
-      <SidebarContent className="py-2">
+      <SidebarContent className="py-2 scrollbar-hide">
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>

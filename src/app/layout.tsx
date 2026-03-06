@@ -11,7 +11,6 @@ const fontDisplay = Montserrat({
 
 const fontSans = Quicksand({
   variable: "--font-sans",
-  subsets: ["latin"],
   weight: ["700", "600", "500", "400", "300"],
 });
 export const metadata: Metadata = {
@@ -32,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${fontSans.variable} ${fontDisplay.variable} antialiased tabular-nums`}
+        className={`${fontSans.variable} ${fontDisplay.variable} antialiased`}
         cz-shortcut-listen="true"
       >
         <AppProviders>{children}</AppProviders>

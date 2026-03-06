@@ -7,6 +7,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  
   --background: 40 33% 98%;
   --foreground: 250 30% 18%;
 
@@ -176,11 +177,18 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: "Quicksand", ui-sans-serif, system-ui, sans-serif;
+  }
+   
+
+
+  html, body, span, div, input, button, p, h1, h2, h3,h4 {
+    @apply tabular-nums;
   }
 
+  
+
   button {
-    @apply outline-none;
+    @apply outline-none hover:bg-accent hover:text-accent-foreground;
   }
 
   input[type="color"] {
@@ -216,4 +224,70 @@
   .num {
     @apply font-extrabold font-display tabular-nums;
   }
+}
+
+
+
+/* scrollbar */
+
+html::-webkit-scrollbar,
+.overflow-auto::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+html,
+.overflow-auto,
+.overflow-y-auto {
+  scrollbar-width: thin;
+  /* For Firefox */
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.3s;
+}
+
+html[data-scrolling="true"],
+.overflow-auto[data-scrolling="true"],
+.overflow-y-auto[data-scrolling="true"],
+html:hover,
+.overflow-auto:hover,
+.overflow-y-auto:hover {
+  scrollbar-color: hsl(var(--primary) / 0.3) transparent;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 0px;
+  transition: background 0.3s;
+}
+
+/* Show thumb when scrolling or hovered */
+html[data-scrolling="true"]::-webkit-scrollbar-thumb,
+.overflow-auto[data-scrolling="true"]::-webkit-scrollbar-thumb,
+.overflow-y-auto[data-scrolling="true"]::-webkit-scrollbar-thumb,
+html:hover::-webkit-scrollbar-thumb,
+.overflow-auto:hover::-webkit-scrollbar-thumb,
+.overflow-y-auto:hover::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.3)  !important;
+}
+
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+  overscroll-behavior-x: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overscroll-behavior-x: none;
 }

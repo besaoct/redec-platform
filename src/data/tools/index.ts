@@ -1,4 +1,5 @@
-import { ArrowLeftRight, QrCode, KeyRound, FileText, Heart, Sparkles, Flame, Users, Wand2 } from "lucide-react";
+import { ArrowLeftRight, QrCode, KeyRound, FileText, Heart, Sparkles, Flame, Users, Wand2, Monitor, Percent, Sigma, Calendar, Divide, GraduationCap, ClipboardList, Target, Landmark, Coins, Activity } from "lucide-react";
+
 
 
 export const tools = [
@@ -13,6 +14,22 @@ export const tools = [
     items: [
       { title: "QR Code Generator", description: "Generate QR codes from URLs or text instantly", icon: QrCode, url: "/qr-generator" },
       { title: "Password Generator", description: "Create strong, customizable passwords", icon: KeyRound, url: "/password-generator" },
+    ],
+  },
+  {
+    category: "Calculators",
+    items: [
+      { title: "Aspect Ratio", description: "Calculate screen dimensions and aspect ratios", icon: Monitor, url: "/aspect-ratio" },
+      { title: "Percentage Calculator", description: "Calculate percentages, increases, and decreases", icon: Percent, url: "/percentage-calculator" },
+      { title: "Average Calculator", description: "Calculate mean, median, mode and range", icon: Sigma, url: "/average-calculator" },
+      { title: "Age Calculator", description: "Calculate your age in years, months, and days", icon: Calendar, url: "/age-calculator" },
+      { title: "Fraction Calculator", description: "Add, subtract, multiply, and divide fractions", icon: Divide, url: "/fraction-calculator" },
+      { title: "Grade Calculator", description: "Calculate your weighted grade for a course", icon: GraduationCap, url: "/grade-calculator" },
+      { title: "GPA Calculator", description: "Calculate your semester and cumulative GPA", icon: ClipboardList, url: "/gpa-calculator" },
+      { title: "Final Grade Calculator", description: "Calculate what you need on your final exam", icon: Target, url: "/final-grade-calculator" },
+      { title: "Mortgage Calculator", description: "Estimate your monthly mortgage payments", icon: Landmark, url: "/mortgage-calculator" },
+      { title: "Compound Interest", description: "Calculate the future value of your investments", icon: Coins, url: "/compound-interest-calculator" },
+      { title: "BMI Calculator", description: "Calculate your Body Mass Index and health category", icon: Activity, url: "/bmi-calculator" },
     ],
   },
   {
