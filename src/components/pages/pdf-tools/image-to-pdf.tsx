@@ -1,17 +1,20 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Info, Construction, Image as ImageIcon, ChevronRight } from "lucide-react";
+import { Info, Construction, ChevronRight } from "lucide-react";
+import { IMAGE_TO_PDF_CONTENT } from "@/data/tools/pdf-tools/image-to-pdf";
 
 export default function ImageToPDF() {
+  const { title, description, comingSoonMessage, comingSoonDescription, about, features, steps, icon: Icon } = IMAGE_TO_PDF_CONTENT;
+
   return (
     <div className="max-w-5xl mr-auto animate-fade-in">
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center gap-4">
         <div className="flex-1">
           <h1 className="text-xl sm:text-3xl font-extrabold font-display flex items-center gap-3">
-            Image to <span className="text-primary">PDF</span>
+            {title.split(' ')[0]} <span className="text-primary">{title.split(' ').slice(1).join(' ')}</span>
           </h1>
-          <p className="text-muted-foreground mt-2">Convert your photos and images into professional PDF documents</p>
+          <p className="text-muted-foreground mt-2">{description}</p>
         </div>
         <div className="flex items-center gap-2 px-3 py-1.5 rounded  bg-orange-500/10 border border-orange-500/20 text-orange-600 dark:text-orange-400 text-xs font-bold uppercase tracking-wider animate-pulse">
           <Construction className="h-3.5 w-3.5" />
@@ -24,11 +27,11 @@ export default function ImageToPDF() {
           <Card className="border-dashed border-2 bg-muted/30">
             <CardContent className="flex flex-col items-center justify-center py-20 text-center">
               <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                <ImageIcon className="h-8 w-8 text-primary opacity-50" />
+                <Icon className="h-8 w-8 text-primary opacity-50" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Image to PDF is Coming Soon</h3>
+              <h3 className="text-lg font-semibold mb-2">{comingSoonMessage}</h3>
               <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-                We're building a fast, high-quality way to turn your images into perfectly formatted PDF files.
+                {comingSoonDescription}
               </p>
             </CardContent>
           </Card>
@@ -41,12 +44,9 @@ export default function ImageToPDF() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 text-sm text-muted-foreground leading-relaxed">
-              <p>
-                The Image to PDF converter will let you take one or more images (JPG, PNG, WebP, and more) and wrap them into a single PDF document. This is ideal for scanning documents with your phone, creating portfolios, or sending multiple photos in a single file.
-              </p>
-              <p>
-                You will be able to adjust page sizes, margins, and image orientation before generating your PDF. Everything happens locally in your browser, so your images are never sent to a server, ensuring total privacy.
-              </p>
+              {about.map((paragraph, i) => (
+                <p key={i}>{paragraph}</p>
+              ))}
             </CardContent>
           </Card>
         </div>
@@ -58,10 +58,9 @@ export default function ImageToPDF() {
             </CardHeader>
             <CardContent>
               <ul className="space-y-4">
-                <FeatureItem title="Multi-format Support" description="Works with JPG, PNG, GIF, BMP, and WebP." />
-                <FeatureItem title="Batch Conversion" description="Combine multiple images into one PDF at once." />
-                <FeatureItem title="Page Customization" description="Set orientation, margins, and page sizes." />
-                <FeatureItem title="High Quality" description="Maintains the original resolution of your images." />
+                {features.map((feature, i) => (
+                  <FeatureItem key={i} title={feature.title} description={feature.description} />
+                ))}
               </ul>
             </CardContent>
           </Card>
@@ -74,21 +73,14 @@ export default function ImageToPDF() {
           How it will work
         </h3>
         <div className="grid sm:grid-cols-3 gap-6 mt-4">
-          <StepItem 
-            step="1" 
-            title="Upload Images" 
-            description="Select or drag the images you want to convert." 
-          />
-          <StepItem 
-            step="2" 
-            title="Customize" 
-            description="Reorder images and adjust the PDF page settings." 
-          />
-          <StepItem 
-            step="3" 
-            title="Convert & Download" 
-            description="Generate your PDF and save it to your device." 
-          />
+          {steps.map((step, i) => (
+            <StepItem 
+              key={i}
+              step={step.step} 
+              title={step.title} 
+              description={step.description} 
+            />
+          ))}
         </div>
       </div>
     </div>

@@ -1,17 +1,20 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Info, Construction, Minimize2, ChevronRight } from "lucide-react";
+import { Info, Construction, ChevronRight } from "lucide-react";
+import { COMPRESS_PDF_CONTENT } from "@/data/tools/pdf-tools/compress-pdf";
 
 export default function CompressPDF() {
+  const { title, description, comingSoonMessage, comingSoonDescription, about, features, steps, icon: Icon } = COMPRESS_PDF_CONTENT;
+
   return (
     <div className="max-w-5xl mr-auto animate-fade-in">
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center gap-4">
         <div className="flex-1">
           <h1 className="text-xl sm:text-3xl font-extrabold font-display flex items-center gap-3">
-            Compress <span className="text-primary">PDF</span>
+            {title.split(' ')[0]} <span className="text-primary">{title.split(' ').slice(1).join(' ')}</span>
           </h1>
-          <p className="text-muted-foreground mt-2">Reduce PDF file size without significantly losing quality</p>
+          <p className="text-muted-foreground mt-2">{description}</p>
         </div>
         <div className="flex items-center gap-2 px-3 py-1.5 rounded bg-orange-500/10 border border-orange-500/20 text-orange-600 dark:text-orange-400 text-xs font-bold uppercase tracking-wider animate-pulse">
           <Construction className="h-3.5 w-3.5" />
@@ -24,11 +27,11 @@ export default function CompressPDF() {
           <Card className="border-dashed border-2 bg-muted/30">
             <CardContent className="flex flex-col items-center justify-center py-20 text-center">
               <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                <Minimize2 className="h-8 w-8 text-primary opacity-50" />
+                <Icon className="h-8 w-8 text-primary opacity-50" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Compress PDF is Coming Soon</h3>
+              <h3 className="text-lg font-semibold mb-2">{comingSoonMessage}</h3>
               <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-                We're developing an intelligent compression algorithm to help you shrink your PDFs for easier sharing.
+                {comingSoonDescription}
               </p>
             </CardContent>
           </Card>
@@ -41,12 +44,9 @@ export default function CompressPDF() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 text-sm text-muted-foreground leading-relaxed">
-              <p>
-                The Compress PDF tool will allow you to reduce the file size of your PDF documents while maintaining an optimal balance of quality and size. This is essential for meeting email attachment limits, saving storage space, and speeding up document uploads.
-              </p>
-              <p>
-                You will be able to choose between different compression levels—ranging from extreme compression to high-quality settings. As with all our PDF tools, the compression process is performed entirely within your browser for complete document security.
-              </p>
+              {about.map((paragraph, i) => (
+                <p key={i}>{paragraph}</p>
+              ))}
             </CardContent>
           </Card>
         </div>
@@ -58,10 +58,9 @@ export default function CompressPDF() {
             </CardHeader>
             <CardContent>
               <ul className="space-y-4">
-                <FeatureItem title="Smart Compression" description="Reduces size while preserving text and image clarity." />
-                <FeatureItem title="Multiple Levels" description="Choose the right balance of size vs. quality." />
-                <FeatureItem title="Instant Results" description="See exactly how much space you've saved." />
-                <FeatureItem title="Browser Security" description="Processing happens locally; no files are uploaded." />
+                {features.map((feature, i) => (
+                  <FeatureItem key={i} title={feature.title} description={feature.description} />
+                ))}
               </ul>
             </CardContent>
           </Card>
@@ -74,21 +73,14 @@ export default function CompressPDF() {
           How it will work
         </h3>
         <div className="grid sm:grid-cols-3 gap-6 mt-4">
-          <StepItem 
-            step="1" 
-            title="Upload PDF" 
-            description="Select the large PDF file you want to compress." 
-          />
-          <StepItem 
-            step="2" 
-            title="Choose Level" 
-            description="Select your preferred level of compression." 
-          />
-          <StepItem 
-            step="3" 
-            title="Shrink & Save" 
-            description="Download your new, smaller PDF document instantly." 
-          />
+          {steps.map((step, i) => (
+            <StepItem 
+              key={i}
+              step={step.step} 
+              title={step.title} 
+              description={step.description} 
+            />
+          ))}
         </div>
       </div>
     </div>
