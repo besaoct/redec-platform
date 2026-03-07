@@ -80,7 +80,9 @@ export default function BondTester() {
     router.push(pathname, { scroll: false });
   };
 
-  const share = () => {
+  const share = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     const url = window.location.href;
     const bond = score !== null ? getBondData(score) : null;
 
@@ -189,14 +191,14 @@ export default function BondTester() {
               className={cn("absolute inset-0 opacity-20 blur-3xl", result.bg)}
             />
 
-            <div className="absolute top-4 right-4 z-10">
+            <div className="absolute top-4 right-4 z-20">
               <Tooltip open={copied}>
-                <TooltipTrigger asChild>
+                <TooltipTrigger asChild  onClick={share}>
                   <Button
                     variant="outline"
                     size="icon"
                     className="h-8 w-8 rounded-full bg-background/50 backdrop-blur-sm"
-                    onClick={share}
+                  
                   >
                     {copied ? (
                       <Check className="h-4 w-4 text-success" />

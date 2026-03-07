@@ -13,6 +13,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+
 } from "@/components/ui/tooltip";
 import { AURA_COLORS, MOODS } from "@/data/tools/fun-tools/aura-reader";
 
@@ -22,12 +23,17 @@ export default function AuraReader() {
   const router = useRouter();
   const pathname = usePathname();
 
+  const [mounted, setMounted] = useState(false);
   const [name, setName] = useState(searchParams.get("name") || "");
   const [selectedMood, setSelectedMood] = useState<number | null>(
     searchParams.get("mood") ? parseInt(searchParams.get("mood")!) : null,
   );
   const [resultIndex, setResultIndex] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const calculateAura = useCallback((userName: string, moodValue: number) => {
     if (!userName || !moodValue) return null;
@@ -75,7 +81,9 @@ export default function AuraReader() {
     router.push(pathname, { scroll: false });
   };
 
-  const share = () => {
+  const share = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     const url = window.location.href;
     const aura = resultIndex !== null ? AURA_COLORS[resultIndex] : null;
     if (navigator.share) {
@@ -101,6 +109,8 @@ export default function AuraReader() {
   };
 
   const aura = resultIndex !== null ? AURA_COLORS[resultIndex] : null;
+
+  if (!mounted) return null;
 
   return (
     <div className="max-w-5xl mr-auto animate-fade-in">
@@ -177,14 +187,13 @@ export default function AuraReader() {
             className={cn("absolute inset-0 opacity-10 blur-3xl", aura.color)}
           />
 
-          <div className="absolute top-4 right-4 z-10">
+          <div className="absolute top-4 right-4 z-20">
             <Tooltip open={copied}>
-              <TooltipTrigger asChild>
+              <TooltipTrigger asChild onClick={share}>
                 <Button
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8 rounded-full bg-background/50 backdrop-blur-sm"
-                  onClick={share}
                 >
                   {copied ? (
                     <Check className="h-4 w-4 text-success" />

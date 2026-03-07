@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,11 +13,20 @@ import {
   Users,
   Info,
   Heart,
-  AlertCircle,
   Calendar,
   ArrowRight,
+  Share2,
+  Check,
+  AlertCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
 import {
   differenceInDays,
   differenceInYears,
@@ -29,15 +39,23 @@ import {
 } from "date-fns";
 
 export default function AgeGapCalculator() {
-  const [mode, setMode] = useState("dob");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
 
-  // DOB Mode State
-  const [dob1, setDob1] = useState("1995-01-01");
-  const [dob2, setDob2] = useState("2000-01-01");
+  const [mounted, setMounted] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  // Absolute Age Mode State
-  const [age1, setAge1] = useState("30");
-  const [age2, setAge2] = useState("25");
+  // Initialize state from URL or defaults
+  const [mode, setMode] = useState(searchParams.get("m") === "age" ? "age" : "dob");
+  const [dob1, setDob1] = useState(searchParams.get("d1") || "1995-01-01");
+  const [dob2, setDob2] = useState(searchParams.get("d2") || "2000-01-01");
+  const [age1, setAge1] = useState(searchParams.get("a1") || "30");
+  const [age2, setAge2] = useState(searchParams.get("a2") || "25");
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const results = useMemo(() => {
     const now = new Date();
@@ -47,7 +65,6 @@ export default function AgeGapCalculator() {
       const d2 = parseISO(dob2);
       if (!isValid(d1) || !isValid(d2)) return null;
 
-      // Future date validation
       const isFuture1 = isAfter(d1, now);
       const isFuture2 = isAfter(d2, now);
       if (isFuture1 || isFuture2) {
@@ -80,8 +97,6 @@ export default function AgeGapCalculator() {
       if (!ruleCheck) {
         const older = maxAge;
         const younger = minAge;
-        // Solve for x: (younger + x) >= (older + x) / 2 + 7
-        // 2y + 2x >= o + x + 14 => x >= o - 2y + 14
         const yearsToWait = older - 2 * younger + 14;
         if (yearsToWait > 0) {
           const acceptanceDate = addYears(now, yearsToWait);
@@ -111,9 +126,7 @@ export default function AgeGapCalculator() {
 
       const olderAge = Math.max(a1, a2);
       const youngerAge = Math.min(a1, a2);
-
       const ratio = youngerAge > 0 ? olderAge / youngerAge : olderAge || 1;
-
       const ruleCheck = checkRule(a1, a2);
       let futureAcceptance = null;
 
@@ -149,24 +162,77 @@ export default function AgeGapCalculator() {
     return younger >= minAge;
   }
 
+  const handleShare = () => {
+    const params = new URLSearchParams();
+    params.set("m", mode);
+    if (mode === "dob") {
+      params.set("d1", dob1);
+      params.set("d2", dob2);
+    } else {
+      params.set("a1", age1);
+      params.set("a2", age2);
+    }
+
+    const url = `${window.location.origin}${pathname}?${params.toString()}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: "Age Gap Result",
+        text: `Check out this age gap calculation!`,
+        url: url,
+      }).catch(() => copyToClipboard(url));
+    } else {
+      copyToClipboard(url);
+    }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    toast.success("Link copied to clipboard!");
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   const reset = () => {
     setDob1("1995-01-01");
     setDob2("2000-01-01");
     setAge1("30");
     setAge2("25");
+    router.push(pathname, { scroll: false });
   };
 
   const today = format(new Date(), "yyyy-MM-dd");
 
+  if (!mounted) return null;
+
   return (
     <div className="max-w-5xl mr-auto animate-fade-in">
-      <div className="mb-6">
-        <h1 className="text-xl sm:text-3xl font-extrabold font-display">
-          Age Gap <span className="text-primary">Calculator</span>
-        </h1>
-        <p className="text-muted-foreground mt-2">
-          Find the age difference and relationship insights between two people
-        </p>
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-xl sm:text-3xl font-extrabold font-display">
+            Age Gap <span className="text-primary">Calculator</span>
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            Find the age difference and relationship insights between two people
+          </p>
+        </div>
+        {results && !results.error && (
+          <TooltipProvider>
+            <Tooltip open={copied}>
+              <TooltipTrigger asChild>
+                <Button 
+                  onClick={handleShare} 
+                  variant="outline" 
+                  className="sm:mb-1 gap-2"
+                >
+                  {copied ? <Check className="h-4 w-4 text-green-500" /> : <Share2 className="h-4 w-4" />}
+                  Share Result
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="top">Link Copied!</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
@@ -179,7 +245,7 @@ export default function AgeGapCalculator() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Tabs value={mode} onValueChange={setMode} className="w-full">
+              <Tabs value={mode} onValueChange={(v) => setMode(v)} className="w-full">
                 <div className="w-full overflow-x-auto">
                   <TabsList className="flex gap-1 mb-8">
                     <TabsTrigger value="dob">Date of Birth</TabsTrigger>
@@ -204,7 +270,7 @@ export default function AgeGapCalculator() {
                       <input
                         type="date"
                         max={today}
-                    
+
                         value={dob2}
                         onChange={(e) => setDob2(e.target.value)}
                       />
@@ -248,7 +314,7 @@ export default function AgeGapCalculator() {
 
           {/* Visual Comparison */}
           {results && !results.error && (
-            <Card>
+            <Card className="animate-in zoom-in-95 duration-300">
               <CardHeader>
                 <CardTitle className="text-lg">Visual Comparison</CardTitle>
               </CardHeader>
@@ -421,10 +487,10 @@ export default function AgeGapCalculator() {
                             )}
                           >
                             {results.ruleCheck
-                              ? "Socially Accepted"
-                              : "Outside Standard"}
+                              ? "Socially Accepted."
+                              : "Outside Standard."}
                           </span>
-                          .
+                          
                         </p>
                       </div>
                     </div>
