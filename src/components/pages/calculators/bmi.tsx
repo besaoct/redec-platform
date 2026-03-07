@@ -8,8 +8,10 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RefreshCcw, Info, Scale } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BMI_CONTENT, BMI_CATEGORIES } from "@/data/tools/calculators/bmi";
 
 export default function BMICalculator() {
+  const { title, description } = BMI_CONTENT;
   const [unit, setUnit] = useState("metric");
 
   // Metric
@@ -35,23 +37,9 @@ export default function BMICalculator() {
 
     if (bmi === 0 || isNaN(bmi)) return null;
 
-    let category = "";
-    let color = "";
-    if (bmi < 18.5) {
-      category = "Underweight";
-      color = "text-blue-500";
-    } else if (bmi < 25) {
-      category = "Normal weight";
-      color = "text-green-500";
-    } else if (bmi < 30) {
-      category = "Overweight";
-      color = "text-orange-500";
-    } else {
-      category = "Obese";
-      color = "text-red-500";
-    }
+    const result = BMI_CATEGORIES.find(c => bmi >= c.min && bmi < c.max) || BMI_CATEGORIES[BMI_CATEGORIES.length - 1];
 
-    return { bmi, category, color };
+    return { bmi, category: result.label, color: result.color };
   }, [unit, weightKg, heightCm, weightLbs, heightFt, heightIn]);
 
   const reset = () => {
@@ -66,10 +54,10 @@ export default function BMICalculator() {
     <div className="max-w-5xl mr-auto animate-fade-in">
       <div className="mb-6">
         <h1 className="text-xl sm:text-3xl font-extrabold font-display">
-          BMI <span className="text-primary">Calculator</span>
+          {title.split(' ')[0]} <span className="text-primary">{title.split(' ').slice(1).join(' ')}</span>
         </h1>
         <p className="text-muted-foreground mt-2">
-          Calculate your Body Mass Index (BMI) to find your health category
+          {description}
         </p>
       </div>
 
@@ -181,26 +169,14 @@ export default function BMICalculator() {
               </div>
 
               <div className="p-4 bg-muted/50 rounded-xl space-y-2 text-left">
-                <div className="flex justify-between text-xs py-1 border-b border-muted">
-                  <span className="text-muted-foreground">Underweight:</span>
-                  <span className="font-medium">Below 18.5</span>
-                </div>
-                <div className="flex justify-between text-xs py-1 border-b border-muted">
-                  <span className="text-muted-foreground">Normal:</span>
-                  <span className="font-medium text-green-600">
-                    18.5 – 24.9
-                  </span>
-                </div>
-                <div className="flex justify-between text-xs py-1 border-b border-muted">
-                  <span className="text-muted-foreground">Overweight:</span>
-                  <span className="font-medium text-orange-600">25 – 29.9</span>
-                </div>
-                <div className="flex justify-between text-xs py-1">
-                  <span className="text-muted-foreground">Obese:</span>
-                  <span className="font-medium text-red-600">
-                    30 or greater
-                  </span>
-                </div>
+                {BMI_CATEGORIES.map((cat, i) => (
+                  <div key={i} className={cn("flex justify-between text-xs py-1 border-muted", i !== BMI_CATEGORIES.length - 1 && "border-b")}>
+                    <span className="text-muted-foreground">{cat.label}:</span>
+                    <span className={cn("font-medium", cat.color.replace('text-', 'text-opacity-80 text-'))}>
+                      {cat.description}
+                    </span>
+                  </div>
+                ))}
               </div>
 
               <div className="flex items-start gap-2 p-3 bg-primary/5 rounded-lg text-left">

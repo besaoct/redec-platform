@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Calendar as CalendarIcon, RefreshCcw, Cake, Clock, History, Timer } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AGE_CONTENT } from "@/data/tools/calculators/age";
 
 export default function AgeCalculator() {
+  const { title, description } = AGE_CONTENT;
   const [birthDate, setBirthDate] = useState("2000-01-01");
   const [targetDate, setTargetDate] = useState(new Date().toISOString().split('T')[0]);
 
@@ -67,8 +69,10 @@ export default function AgeCalculator() {
   return (
     <div className="max-w-5xl mr-auto animate-fade-in">
       <div className="mb-6">
-        <h1 className="text-xl sm:text-3xl font-extrabold font-display">Age <span className="text-primary">Calculator</span></h1>
-        <p className="text-muted-foreground mt-2">Calculate exact age and time since birth</p>
+        <h1 className="text-xl sm:text-3xl font-extrabold font-display">
+          {title.split(' ')[0]} <span className="text-primary">{title.split(' ').slice(1).join(' ')}</span>
+        </h1>
+        <p className="text-muted-foreground mt-2">{description}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

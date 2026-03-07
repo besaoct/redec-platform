@@ -8,9 +8,10 @@ import { Label } from "@/components/ui/label";
 import { Percent, RefreshCcw,  Copy, ArrowRight, TrendingUp, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { PERCENTAGE_CONTENT } from "@/data/tools/calculators/percentage";
 
 export default function PercentageCalculator() {
-
+  const { title, description } = PERCENTAGE_CONTENT;
 
   // 1. What is P% of V?
   const [p1, setP1] = useState("10");
@@ -41,8 +42,10 @@ export default function PercentageCalculator() {
   return (
     <div className="max-w-5xl mr-auto animate-fade-in">
       <div className="mb-6">
-        <h1 className="text-xl sm:text-3xl font-extrabold font-display">Percentage <span className="text-primary">Calculator</span></h1>
-        <p className="text-muted-foreground mt-2">Multiple percentage tools for various calculations</p>
+        <h1 className="text-xl sm:text-3xl font-extrabold font-display">
+          {title.split(' ')[0]} <span className="text-primary">{title.split(' ').slice(1).join(' ')}</span>
+        </h1>
+        <p className="text-muted-foreground mt-2">{description}</p>
       </div>
 
       <div className="grid gap-6">
