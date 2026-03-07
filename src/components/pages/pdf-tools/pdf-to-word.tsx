@@ -1,19 +1,22 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Info, Construction, FileType,  ChevronRight } from "lucide-react";
+import { Info, Construction, ChevronRight } from "lucide-react";
+import { PDF_TO_WORD_CONTENT } from "@/data/tools/pdf-tools/pdf-to-word";
 
 export default function PDFToWord() {
+  const { title, description, comingSoonMessage, comingSoonDescription, about, features, steps, icon: Icon } = PDF_TO_WORD_CONTENT;
+
   return (
     <div className="max-w-5xl mr-auto animate-fade-in">
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center gap-4">
         <div className="flex-1">
           <h1 className="text-xl sm:text-3xl font-extrabold font-display flex items-center gap-3">
-            PDF to <span className="text-primary">Word</span>
+            {title.split(' ')[0]} <span className="text-primary">{title.split(' ').slice(1).join(' ')}</span>
           </h1>
-          <p className="text-muted-foreground mt-2">Convert PDF documents into editable Microsoft Word files</p>
+          <p className="text-muted-foreground mt-2">{description}</p>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded bg-orange-500/10 border border-orange-500/20 text-orange-600 dark:text-orange-400 text-xs font-bold uppercase tracking-wider animate-pulse">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-600 dark:text-orange-400 text-xs font-bold uppercase tracking-wider animate-pulse">
           <Construction className="h-3.5 w-3.5" />
           Development in Progress
         </div>
@@ -24,11 +27,11 @@ export default function PDFToWord() {
           <Card className="border-dashed border-2 bg-muted/30">
             <CardContent className="flex flex-col items-center justify-center py-20 text-center">
               <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                <FileType className="h-8 w-8 text-primary opacity-50" />
+                <Icon className="h-8 w-8 text-primary opacity-50" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">PDF to Word is Coming Soon</h3>
+              <h3 className="text-lg font-semibold mb-2">{comingSoonMessage}</h3>
               <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-                We're working on a high-fidelity conversion engine to turn your PDFs into editable documents.
+                {comingSoonDescription}
               </p>
             </CardContent>
           </Card>
@@ -41,12 +44,9 @@ export default function PDFToWord() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 text-sm text-muted-foreground leading-relaxed">
-              <p>
-                The PDF to Word converter will allow you to transform non-editable PDF files into fully customizable Word documents (.docx). This tool is essential for reusing text, updating reports, or editing legacy documents without starting from scratch.
-              </p>
-              <p>
-                We are focusing on preserving the original layout, fonts, and images as accurately as possible. Like all our tools, the conversion will be optimized for speed and privacy, handling your documents with care.
-              </p>
+              {about.map((paragraph, i) => (
+                <p key={i}>{paragraph}</p>
+              ))}
             </CardContent>
           </Card>
         </div>
@@ -58,37 +58,29 @@ export default function PDFToWord() {
             </CardHeader>
             <CardContent>
               <ul className="space-y-4">
-                <FeatureItem title="Layout Preservation" description="Keep your document's original formatting intact." />
-                <FeatureItem title="Editable Text" description="Convert scanned or static text into modifiable content." />
-                <FeatureItem title="Image Extraction" description="High-quality images are carried over to the Word file." />
-                <FeatureItem title="Secure Conversion" description="Your documents are processed safely and privately." />
+                {features.map((feature, i) => (
+                  <FeatureItem key={i} title={feature.title} description={feature.description} />
+                ))}
               </ul>
             </CardContent>
           </Card>
         </div>
       </div>
 
-      <div className="mt-8 bg-muted/30 p-6 rounded border">
+      <div className="mt-8 bg-muted/30 p-6 rounded-xl border">
         <h3 className="text-sm font-semibold mb-3 flex items-center gap-2 text-foreground">
           <ChevronRight className="h-4 w-4 text-primary" />
           How it will work
         </h3>
         <div className="grid sm:grid-cols-3 gap-6 mt-4">
-          <StepItem 
-            step="1" 
-            title="Upload PDF" 
-            description="Select the PDF document you need to edit." 
-          />
-          <StepItem 
-            step="2" 
-            title="Process" 
-            description="Our engine analyzes and converts the document structure." 
-          />
-          <StepItem 
-            step="3" 
-            title="Download Word" 
-            description="Get your new .docx file and start editing immediately." 
-          />
+          {steps.map((step, i) => (
+            <StepItem 
+              key={i}
+              step={step.step} 
+              title={step.title} 
+              description={step.description} 
+            />
+          ))}
         </div>
       </div>
     </div>
