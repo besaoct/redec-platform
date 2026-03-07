@@ -90,3 +90,22 @@ export const BOND_DATA = [
     activities: ["Finishing each other's sentences", "Taking over the world"]
   }
 ];
+
+export const BOND_TESTER_CONTENT = {
+  title: "Bond Tester",
+  description: "Analyze the deep, algorithmic nature of your friendship",
+  about: [
+    "The Bond Tester is a fun, lighthearted tool that goes beyond a simple 'friendship percentage' to provide a detailed breakdown of your relationship dynamic. It uses a custom algorithm to analyze the names provided and categorize your bond into one of several unique types.",
+    "From 'Nemesis Protocol' to 'Cosmic Twin,' each result comes with a set of personality traits and suggested activities that perfectly capture the essence of your connection. It's a great way to celebrate your friendship or just have a laugh with a friend."
+  ],
+  features: [
+    { title: "Dynamic Bond Typing", description: "Discover your specific relationship category based on our algorithm." },
+    { title: "Trait Analysis", description: "See the key characteristics that define your friendship." },
+    { title: "Activity Suggestions", description: "Get fun ideas for things you and your friend should do together." }
+  ],
+  steps: [
+    { step: "1", title: "Enter Names", description: "Type in your name and your friend's name into the input fields." },
+    { step: "2", title: "Run Analysis", description: "Click 'Test Our Bond' to let the algorithm analyze your connection." },
+    { step: "3", title: "Review Bond", description: "See your bond type, score, and detailed relationship breakdown." }
+  ]
+};

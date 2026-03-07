@@ -299,7 +299,7 @@ export default function BondTester() {
         </div>
       )}
 
-      <div className="mt-8 bg-muted/30 p-4 rounded-xl">
+      <div className="mt-8 bg-muted/30 p-4 rounded border">
         <h3 className="text-sm font-semibold mb-2">How the Algorithm Works</h3>
         <p className="text-xs text-muted-foreground leading-relaxed">
           The Bond Tester uses a sophisticated (and entirely fictional)

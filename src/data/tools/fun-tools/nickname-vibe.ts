@@ -17,3 +17,22 @@ export const NICKNAME_TEMPLATES: Record<string, string[]> = {
   ghostly: ["Phantom [N]", "[N] the Hollow", "Specter [N]", "Whispering [N]", "Ethereal [N]", "Pale [N]"],
   cute: ["[N]-pie", "Little [N]", "[N]-kins", "Sweet [N]", "[N]-bear", "Tiny [N]", "[N]-puff"],
 };
+
+export const NICKNAME_VIBE_CONTENT = {
+  title: "Vibe Nickname",
+  description: "Create unique and fun nicknames based on your vibe",
+  about: [
+    "The Vibe Nickname generator is a fun tool that helps you create a new persona based on your name and a chosen 'vibe'. Whether you want to be a legendary hero, a mysterious ghost, or a salty pirate, our tool provides a variety of creative templates.",
+    "Each vibe comes with its own set of unique naming patterns and icons, making it easy to find a nickname that matches your personality or just provides a good laugh for your social profiles or gaming accounts."
+  ],
+  features: [
+    { title: "Multiple Vibes", description: "Choose from 6 different character vibes including Wizard, Pirate, and Hero." },
+    { title: "Personalized Results", description: "All nicknames are dynamically generated using your provided name." },
+    { title: "Creative Templates", description: "Each vibe features several unique naming patterns for variety." }
+  ],
+  steps: [
+    { step: "1", title: "Enter Name", description: "Provide your name or a friend's name to use as a base." },
+    { step: "2", title: "Choose Vibe", description: "Select the character vibe that matches your mood or preference." },
+    { step: "3", title: "Generate & Select", description: "Click 'Generate Nickname' to see your new personas and pick your favorite." }
+  ]
+};

@@ -16,7 +16,7 @@ export default function MergePDF() {
           </h1>
           <p className="text-muted-foreground mt-2">{description}</p>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-600 dark:text-orange-400 text-xs font-bold uppercase tracking-wider animate-pulse">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded bg-orange-500/10 border border-orange-500/20 text-orange-600 dark:text-orange-400 text-xs font-bold uppercase tracking-wider animate-pulse">
           <Construction className="h-3.5 w-3.5" />
           Development in Progress
         </div>
@@ -67,7 +67,7 @@ export default function MergePDF() {
         </div>
       </div>
 
-      <div className="mt-8 bg-muted/30 p-6 rounded-xl border">
+      <div className="mt-8 bg-muted/30 p-6 rounded border">
         <h3 className="text-sm font-semibold mb-3 flex items-center gap-2 text-foreground">
           <ChevronRight className="h-4 w-4 text-primary" />
           How it will work

@@ -502,7 +502,7 @@ export default function AgeGapCalculator() {
         </div>
       </div>
 
-      <div className="mt-8 bg-muted/30 p-6 rounded-xl border">
+      <div className="mt-8 bg-muted/30 p-6 rounded border">
         <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
           <Info className="h-4 w-4 text-primary" />
           The "Half Your Age Plus Seven" Rule

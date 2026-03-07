@@ -113,3 +113,22 @@ export const MOODS = [
   { emoji: "🎨", label: "Creative", value: 11 },
   { emoji: "💖", label: "Loving", value: 12 },
 ];
+
+export const AURA_READER_CONTENT = {
+  title: "Aura Reader",
+  description: "Discover the color of your energy based on your name and mood",
+  about: [
+    "The Aura Reader is a fun, spiritual-inspired tool that analyzes your current energy through a combination of your name and your current mood. Auras are often described as the subtle, luminous field of radiation surrounding a person.",
+    "Our tool assigns a color to your aura and provides insights into your personality traits and current state of mind. It's a fun way to reflect on your feelings and discover the vibrant energy you're putting out into the world today."
+  ],
+  features: [
+    { title: "Energy Analysis", description: "Get a personalized aura color based on your inputs." },
+    { title: "Mood Tracking", description: "Incorporate your current emotional state into your reading." },
+    { title: "Trait Breakdown", description: "Discover the specific personality traits associated with your aura color." }
+  ],
+  steps: [
+    { step: "1", title: "Enter Your Name", description: "Provide your name to personalize the energy calculation." },
+    { step: "2", title: "Select Your Mood", description: "Choose the emoji that best reflects how you're feeling right now." },
+    { step: "3", title: "Discover Your Aura", description: "Click 'Read My Aura' to see your color and detailed description." }
+  ]
+};
