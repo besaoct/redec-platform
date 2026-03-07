@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Search, CornerDownLeft, X, ArrowLeft } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,7 @@ export function SearchBar() {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [mounted, setMounted] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -20,30 +21,42 @@ export function SearchBar() {
   const pathname = usePathname();
   const isMobile = useIsMobile();
 
-  const allItems = useMemo(() => {
-    return tools.flatMap((cat) =>
-      cat.items.map((item) => ({ ...item, category: cat.category })),
-    );
+  // Mount safety
+  useEffect(() => {
+    setMounted(true);
   }, []);
+
+  // Flatten tools once – very cheap operation
+  const allItems = useMemo(
+    () =>
+      tools.flatMap((cat) =>
+        cat.items.map((item) => ({ ...item, category: cat.category })),
+      ),
+    [], // ← empty deps = compute only once
+  );
 
   const filteredItems = useMemo(() => {
     if (!query.trim()) return [];
+    const q = query.toLowerCase();
     return allItems
       .filter(
         (item) =>
-          item.title.toLowerCase().includes(query.toLowerCase()) ||
-          item.description.toLowerCase().includes(query.toLowerCase()) ||
-          item.category.toLowerCase().includes(query.toLowerCase()),
+          item.title.toLowerCase().includes(q) ||
+          item.description.toLowerCase().includes(q) ||
+          item.category.toLowerCase().includes(q),
       )
       .slice(0, 8);
   }, [query, allItems]);
 
-  const handleSelect = (url: string) => {
-    router.push(url);
-    setIsOpen(false);
-    setQuery("");
-    inputRef.current?.blur();
-  };
+  const handleSelect = useCallback(
+    (url: string) => {
+      router.push(url);
+      setIsOpen(false);
+      setQuery("");
+      inputRef.current?.blur();
+    },
+    [router],
+  );
 
   // Close on route change
   useEffect(() => {
@@ -52,12 +65,40 @@ export function SearchBar() {
     inputRef.current?.blur();
   }, [pathname]);
 
-  // Unified click-outside + keyboard handling
+  // Keep open on mobile while input is focused
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    if (!isMobile) return;
+
+    const input = inputRef.current;
+    if (!input) return;
+
+    const onFocus = () => setIsOpen(true);
+    const onBlur = (e: FocusEvent) => {
+      // Only close if focus did NOT move inside our container
       if (
         containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
+        !containerRef.current.contains(e.relatedTarget as Node)
+      ) {
+        setIsOpen(false);
+        setQuery("");
+      }
+    };
+
+    input.addEventListener("focus", onFocus);
+    input.addEventListener("blur", onBlur);
+
+    return () => {
+      input.removeEventListener("focus", onFocus);
+      input.removeEventListener("blur", onBlur);
+    };
+  }, [isMobile]);
+
+  // Keyboard + click outside logic
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
       ) {
         setIsOpen(false);
         setQuery("");
@@ -66,7 +107,7 @@ export function SearchBar() {
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Open with Cmd/Ctrl + K
+      // Global shortcut: Cmd/Ctrl + K
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         setIsOpen(true);
@@ -81,60 +122,68 @@ export function SearchBar() {
         setIsOpen(false);
         inputRef.current?.blur();
       } else if (e.key === "ArrowDown") {
-        if (filteredItems.length > 0) {
-          e.preventDefault();
-          setActiveIndex((prev) =>
-            prev < filteredItems.length - 1 ? prev + 1 : prev,
-          );
-        }
+        e.preventDefault();
+        setActiveIndex((prev) =>
+          prev < filteredItems.length - 1 ? prev + 1 : prev,
+        );
       } else if (e.key === "ArrowUp") {
-        if (filteredItems.length > 0) {
-          e.preventDefault();
-          setActiveIndex((prev) => (prev > 0 ? prev - 1 : -1));
-        }
+        e.preventDefault();
+        setActiveIndex((prev) => (prev > 0 ? prev - 1 : -1));
       } else if (e.key === "Enter") {
+        e.preventDefault();
         if (filteredItems.length > 0) {
-          e.preventDefault();
-          const selectedIndex = activeIndex >= 0 ? activeIndex : 0;
-          handleSelect(filteredItems[selectedIndex].url);
+          const idx = activeIndex >= 0 ? activeIndex : 0;
+          handleSelect(filteredItems[idx].url);
         }
       }
     };
 
-    // Only listen when open
-    if (isOpen) {
+    document.addEventListener("keydown", handleKeyDown);
+    // Only register click-outside when open (desktop mostly)
+    if (isOpen && !isMobile) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
-    document.addEventListener("keydown", handleKeyDown);
-
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isOpen, filteredItems, activeIndex, handleSelect]);
+  }, [isOpen, isMobile, filteredItems, activeIndex, handleSelect]);
 
-  // Reset active index when query changes
+  // Reset active index on query change
   useEffect(() => {
     setActiveIndex(-1);
   }, [query]);
 
-  // Mobile: lock body scroll + auto-focus
+  // Mobile: body scroll lock + auto-focus
   useEffect(() => {
-    if (isMobile && isOpen) {
-      document.body.style.overflow = "hidden";
-      const timer = setTimeout(() => inputRef.current?.focus(), 100);
-      return () => clearTimeout(timer);
-    } else {
+    if (!isMobile || !isOpen) {
       document.body.style.overflow = "";
+      return;
     }
+
+    document.body.style.overflow = "hidden";
+    inputRef.current?.focus();
+
+    // Fallback: very short delay only if needed (test!)
+    // const timer = setTimeout(() => inputRef.current?.focus(), 150);
+
+    return () => {
+      // clearTimeout(timer);
+      document.body.style.overflow = "";
+    };
   }, [isMobile, isOpen]);
 
-  // Mobile collapsed state: just search icon
-  if (isMobile && !isOpen) {
+  // Mobile collapsed state (only icon)
+  if (mounted && isMobile && !isOpen) {
     return (
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          setIsOpen(true);
+          if (inputRef.current) {
+            inputRef.current.focus();
+          }
+        }}
         className="p-2 rounded-full hover:bg-muted transition-colors ml-auto"
         aria-label="Search tools"
       >
@@ -142,6 +191,8 @@ export function SearchBar() {
       </button>
     );
   }
+
+  if (!mounted) return null;
 
   const showSuggestions = filteredItems.length > 0;
 
@@ -154,14 +205,13 @@ export function SearchBar() {
           ? "fixed inset-0 z-50 p-4 bg-background h-screen flex flex-col animate-in fade-in slide-in-from-top-4 duration-200"
           : "w-full max-w-sm lg:max-w-md",
       )}
-      // Mobile: tap on the padding/backdrop area → close
       onClick={(e) => {
         if (isMobile && isOpen && e.target === e.currentTarget) {
           setIsOpen(false);
         }
       }}
     >
-      {/* Desktop visual backdrop only (no click handler here anymore) */}
+      {/* Desktop-only subtle backdrop */}
       {!isMobile && isOpen && (
         <div
           onClick={() => setIsOpen(false)}
@@ -172,7 +222,7 @@ export function SearchBar() {
       <div className="w-full h-full flex flex-col">
         {/* Input row */}
         <div className="relative group flex items-center gap-2">
-          {isMobile && (
+          {isMobile && isOpen && (
             <button
               onClick={() => setIsOpen(false)}
               className="p-2 hover:bg-muted rounded-full transition-colors shrink-0"
@@ -188,12 +238,12 @@ export function SearchBar() {
               ref={inputRef}
               placeholder="Search tools..."
               className={cn(
-                "pl-10 h-11 sm:h-10 bg-muted/40 sm:bg-transparent border-none focus-visible:ring-1 focus-visible:ring-primary/20 sm:focus-visible:ring-transparent shadow-none transition-all rounded sm:rounded-none",
+                "pl-10 h-11 sm:h-10 bg-muted/40 md:bg-transparent border-none focus-visible:ring-1 focus-visible:ring-primary/20 md:focus-visible:ring-transparent shadow-none transition-all rounded md:rounded-none",
               )}
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
-                setIsOpen(true);
+                setIsOpen(true); // ensure open on typing
               }}
               onFocus={() => setIsOpen(true)}
             />
@@ -225,13 +275,13 @@ export function SearchBar() {
           </div>
         </div>
 
-        {/* Suggestions dropdown / mobile list */}
+        {/* Suggestions / mobile list */}
         {showSuggestions && (
           <div
             className={cn(
               "bg-popover border shadow-2xl overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200",
               isMobile
-                ? "relative mt-4 border-none shadow-none bg-transparent flex-1 overflow-y-auto"
+                ? "relative h-full mt-4 border-none shadow-none bg-transparent flex-1 overflow-y-auto"
                 : "absolute top-[calc(100%+4px)] w-full rounded min-w-xs",
             )}
           >
@@ -271,9 +321,9 @@ export function SearchBar() {
                     </div>
 
                     {!isMobile && activeIndex === index ? (
-                      <CornerDownLeft className="h-3.5 w-3.5 text-background/50  dark:text-muted-foreground/80 animate-in slide-in-from-right-2" />
+                      <CornerDownLeft className="h-3.5 w-3.5 text-background/50 dark:text-muted-foreground/80 animate-in slide-in-from-right-2" />
                     ) : (
-                      <span className="text-[10px] text-muted-foreground  font-medium px-1.5">
+                      <span className="text-[10px] text-muted-foreground font-medium px-1.5">
                         {item.category}
                       </span>
                     )}
@@ -302,7 +352,7 @@ export function SearchBar() {
           </div>
         )}
 
-        {/* Mobile no-results state */}
+        {/* Mobile no-results placeholder */}
         {isMobile && !showSuggestions && query.trim() !== "" && (
           <div className="flex flex-col items-center justify-center flex-1 text-muted-foreground gap-2 opacity-60">
             <Search className="h-10 w-10 mb-2" />
