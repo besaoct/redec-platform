@@ -198,7 +198,7 @@
   input[type="date"] {
   @apply h-8 max-h-8 bg-input py-1 px-3 rounded text-sm text-foreground/80 border border-input focus:outline-0 ;
 
-  background-image: url('/icons/calculators/age.svg');
+  background-image: url('/icons/common/calendar.svg');
   background-repeat: no-repeat;
   background-position: right 14px center;
   background-size: 1rem;

@@ -2,19 +2,17 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardContent} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { User, RefreshCcw, Check, Zap, Copy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import {
-  VIBES,
-  NICKNAME_TEMPLATES,
-} from "@/data/tools/fun-tools/nickname-generator";
+import { NICKNAME_TEMPLATES, VIBES } from "@/data/tools/fun-tools/nickname-vibe";
 
-export default function NicknameGenerator() {
+
+export default function NicknameVibe() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();

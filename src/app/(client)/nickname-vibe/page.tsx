@@ -1,4 +1,4 @@
-import NicknameGenerator from "@/components/pages/fun-tools/nickname-generator";
+import NicknameVibe from "@/components/pages/fun-tools/nickname-vibe";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -7,10 +7,10 @@ export const metadata: Metadata = {
   description: "Create unique and fun nicknames based on your vibe",
 };
 
-export default function NicknameGeneratorPage() {
+export default function NicknameVibePage() {
   return (
     <Suspense fallback={<></>}>
-      <NicknameGenerator />
+      <NicknameVibe />
     </Suspense>
   );
 }
